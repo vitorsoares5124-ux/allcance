@@ -790,7 +790,7 @@ function saveConfig() {
     localStorage.setItem('lp_supabase_key',  document.getElementById('cfgSupabaseKey').value.trim());
     localStorage.setItem('lp_github_repo',   document.getElementById('cfgGithubRepo').value.trim());
     localStorage.setItem('lp_github_token',  document.getElementById('cfgGithubToken').value.trim());
-    initSupabase();
+    initSupabase(true);
     showToast('✅ Configurações salvas!');
 }
 
@@ -807,10 +807,13 @@ function toggleConfig() {
     body.classList.toggle('open');
 }
 
-function initSupabase() {
+function initSupabase(force = false) {
+    if (supabaseClient && !force) return true;
     const cfg = getConfig();
     if (cfg.supabaseUrl && cfg.supabaseKey && window.supabase) {
-        supabaseClient = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey);
+        supabaseClient = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
         return true;
     }
     return false;
