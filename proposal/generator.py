@@ -51,28 +51,29 @@ def call_llm(prompt: str, system_prompt: str = "", model_tier: str = "flash") ->
     """
     # 1. Google Gemini (Free tier disponível)
     if GEMINI_API_KEY:
-        model = "gemini-1.5-flash" if model_tier == "flash" else "gemini-1.5-pro"
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
-        
-        contents = []
-        if system_prompt:
-            contents.append({"role": "user", "parts": [{"text": f"INSTRUÇÃO DO SISTEMA:\n{system_prompt}\n\nREQUISIÇÃO:\n{prompt}"}]})
-        else:
-            contents.append({"role": "user", "parts": [{"text": prompt}]})
+        models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro"] if model_tier == "flash" else ["gemini-1.5-pro", "gemini-1.5-flash"]
+        for model in models_to_try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+            
+            contents = []
+            if system_prompt:
+                contents.append({"role": "user", "parts": [{"text": f"INSTRUÇÃO DO SISTEMA:\n{system_prompt}\n\nREQUISIÇÃO:\n{prompt}"}]})
+            else:
+                contents.append({"role": "user", "parts": [{"text": prompt}]})
 
-        body = json.dumps({"contents": contents}).encode('utf-8')
-        req = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json'}, method='POST')
-        
-        try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                data = json.loads(resp.read().decode('utf-8'))
-                candidates = data.get('candidates', [])
-                if candidates:
-                    parts = candidates[0].get('content', {}).get('parts', [])
-                    if parts:
-                        return parts[0].get('text', '').strip()
-        except Exception as e:
-            print(f"  [IA Warning] Erro no Gemini ({model}): {e}")
+            body = json.dumps({"contents": contents}).encode('utf-8')
+            req = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json'}, method='POST')
+            
+            try:
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    data = json.loads(resp.read().decode('utf-8'))
+                    candidates = data.get('candidates', [])
+                    if candidates:
+                        parts = candidates[0].get('content', {}).get('parts', [])
+                        if parts:
+                            return parts[0].get('text', '').strip()
+            except Exception as e:
+                print(f"  [IA Info] Tentativa no Gemini ({model}) retornou: {e}. Tentando fallback...")
 
     # 2. Groq (Llama 3 / Mixtral - Free tier rápido)
     if GROQ_API_KEY:
