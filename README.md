@@ -1,15 +1,16 @@
 # Lead Prospector ⚡
 
-Sistema de prospecção de leads automatizado que extrai dados de empresas do Google Maps.
+Sistema de prospecção de leads e geração automática de propostas comerciais personalizadas em PDF com IA e Playwright.
 
 ## Stack
 
 | Componente    | Tecnologia                      |
 |---------------|----------------------------------|
 | Scraper       | Python + Playwright (headless)   |
-| Execução      | GitHub Actions (workflow_dispatch) |
-| Banco de dados| Supabase (Postgres)              |
-| Frontend      | HTML + CSS + JS (vanilla)        |
+| Propostas     | Playwright + LLMs (Gemini / Groq / OpenAI) |
+| Execução      | GitHub Actions (workflow_dispatch sob demanda) |
+| Banco de dados| Supabase (Postgres + Storage)    |
+| Frontend      | HTML + CSS + JS (Vercel dark style) |
 
 ## Setup
 
