@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allcance • Prospecção & Inteligência de Leads</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* ============================================================
+           MONOCHROMATIC DESIGN SYSTEM (Pure Black & White Vercel Style)
+           ============================================================ */
+        :root {
+            --bg-base:          #000000;
+            --bg-surface:       #0a0a0a;
+            --bg-surface-elev:  #121212;
+            --bg-surface-hover: #1a1a1a;
+            --bg-input:         #0d0d0d;
+            
+            --border-subtle:    #222222;
+            --border-medium:    #333333;
+            --border-focus:     #666666;
+            --border-highlight: #ffffff;
+
+            --text-primary:     #ffffff;
+            --text-secondary:   #a1a1aa;
+            --text-tertiary:    #71717a;
+            --text-muted:       #52525b;
+
+            --radius-sm:  6px;
+            --radius-md:  8px;
+            --radius-lg:  12px;
+            --radius-xl:  16px;
+            --radius-pill: 9999px;
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 0 1px var(--border-subtle);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+
+        .app-container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 20px 16px 40px 16px;
+        }
+
+        /* ============================================================
+           HEADER (Pure Clean Monochromatic + Pure PNG Logo)
+           ============================================================ */
+        header.app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            min-width: 0;
+            flex: 1;
+        }
+
+        /* Logo limpa em PNG sem caixa ou efeitos */
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .brand-titles {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .brand-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .brand-name {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .brand-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-surface-elev);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-medium);
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           NAVIGATION TABS (Vercel Linear Clean)
+           ============================================================ */
+        .tabs-nav {
+            display: flex;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            color: #ffffff;
+            background: var(--bg-surface-elev);
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: #000000;
+            font-weight: 700;
+        }
+
+        .tab-btn .tab-count {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-count {
+            background: rgba(0, 0, 0, 0.15);
+            color: #000000;
+        }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; animation: fadeIn 0.15s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(3px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           BUTTONS (Pure Monochromatic Black & White System)
+           ============================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 9px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        /* Primário: Branco com texto preto */
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #e4e4e7;
+            border-color: #e4e4e7;
+        }
+
+        /* Secundário: Fundo escuro com borda */
+        .btn-secondary {
+            background: var(--bg-surface-elev);
+            color: var(--text-primary);
+            border: 1px solid var(--border-medium);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--border-focus);
+            color: #ffffff;
+        }
+
+        /* Ghost / Outline */
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-surface);
+            border-color: var(--border-medium);
+            color: #ffffff;
+        }
+
+        /* WhatsApp: Monocromático de alto contraste */
+        .btn-whatsapp {
+            background: #ffffff;
+            color: #000000 !important;
+            border: 1px solid #ffffff;
+            font-weight: 700;
+        }
+
+        .btn-whatsapp:hover {
+            background: #e4e4e7;
+        }
+
+        /* WhatsApp: Estado Prospectado (Cinza Escuro) */
+        .btn-whatsapp-contacted {
+            background: #18181b !important;
+            color: #a1a1aa !important;
+            border: 1px solid #27272a !important;
+            font-weight: 600;
+        }
+
+        .btn-whatsapp-contacted:hover {
+            background: #27272a !important;
+            border-color: #3f3f46 !important;
+            color: #ffffff !important;
+        }
+
+        /* Gerar Proposta */
+        .btn-generate {
+            background: var(--bg-surface-elev);
+            color: #ffffff;
+            border: 1px solid var(--border-medium);
+        }
+
+        .btn-generate:hover {
+            background: var(--bg-surface-hover);
+            border-color: #ffffff;
+        }
+
+        /* Baixar PDF */
+        .btn-download {
+            background: #ffffff;
+            color: #000000 !important;
+            border: 1px solid #ffffff;
+            font-weight: 700;
+        }
+
+        .btn-download:hover {
+            background: #e4e4e7;
+        }
+
+        .btn-xs { padding: 5px 10px; font-size: 11px; border-radius: var(--radius-sm); }
+        .btn-sm { padding: 7px 12px; font-size: 12px; border-radius: var(--radius-sm); }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+        /* ============================================================
+           CARDS & PANELS
+           ============================================================ */
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* ============================================================
+           FORMS & INPUTS
+           ============================================================ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--border-highlight);
+            background: #111111;
+        }
+
+        .form-input::placeholder { color: var(--text-muted); }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%3A888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+            cursor: pointer;
+        }
+
+        /* Autocomplete Dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #111114;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+        }
+
+        .autocomplete-item {
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.15s ease;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover {
+            background: #1c1c24;
+            color: #ffffff;
+        }
+
+        .autocomplete-item .item-sub {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-left: auto;
+        }
+
+        /* Search Feedback */
+        .search-feedback {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface-elev);
+            border: 1px solid var(--border-medium);
+            display: none;
+        }
+
+        .search-feedback.visible { display: block; }
+        .search-feedback h4 { font-size: 13px; font-weight: 700; color: #ffffff; margin-bottom: 2px; }
+        .search-feedback p { font-size: 12px; color: var(--text-secondary); }
+
+        /* ============================================================
+           TOOLBAR & FILTERS (Clean & Non-Breaking on Mobile)
+           ============================================================ */
+        .leads-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .filter-input {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 8px 12px;
+            font-size: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .filter-input:focus { border-color: var(--border-medium); }
+
+        /* ============================================================
+           DESKTOP TABLE
+           ============================================================ */
+        .table-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
+        }
+
+        table.leads-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        table.leads-table thead {
+            background: #050505;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        table.leads-table th {
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+        }
+
+        table.leads-table tbody tr {
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        table.leads-table tbody tr:last-child { border-bottom: none; }
+        table.leads-table tbody tr:hover { background: var(--bg-surface-elev); }
+
+        table.leads-table td {
+            padding: 14px 16px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .lead-primary-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            max-width: 280px;
+            min-width: 0;
+        }
+
+        .lead-company-name {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 14px;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+        }
+
+        .lead-company-phone {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .lead-context-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .lead-nicho-text { font-size: 12px; font-weight: 600; color: #ffffff; }
+        .lead-region-text { font-size: 11px; color: var(--text-tertiary); }
+
+        /* ============================================================
+           MONOCHROMATIC BADGES & STATUS
+           ============================================================ */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            text-decoration: none;
+        }
+
+        .badge-positive {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .badge-negative {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .lead-status-dropdown {
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: var(--radius-pill);
+            background: var(--bg-base);
+            border: 1px solid var(--border-medium);
+            color: #ffffff;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* ============================================================
+           MOBILE CARDS (Clean, Flawless Layout)
+           ============================================================ */
+        .mobile-lead-cards {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mobile-lead-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mobile-lead-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .mobile-lead-card-header > div:first-child {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mobile-lead-card-header select {
+            flex-shrink: 0;
+        }
+
+        .mobile-lead-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .mobile-tag {
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: var(--bg-surface-elev);
+            border: 1px solid var(--border-subtle);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .mobile-lead-actions-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .mobile-lead-actions-row .btn {
+            flex: 1;
+        }
+
+        /* ============================================================
+           CONFIG MODAL
+           ============================================================ */
+        .config-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .config-overlay.open { display: flex; }
+
+        .config-modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 540px;
+            padding: 24px;
+        }
+
+        .config-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .config-modal-title { font-size: 15px; font-weight: 700; color: #ffffff; }
+
+        /* Empty State */
+        .empty-view {
+            padding: 60px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-view h3 { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .empty-view p { font-size: 13px; color: var(--text-tertiary); max-width: 320px; margin-bottom: 16px; }
+
+        /* Toast */
+        .toast-viewport {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast-item {
+            background: #ffffff;
+            color: #000000;
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            animation: fadeIn 0.15s ease-out;
+        }
+
+        .toast-item.error {
+            background: #27272a;
+            color: #ffffff;
+            border: 1px solid #3f3f46;
+        }
+
+        .spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ============================================================
+           MEDIA QUERIES (Mobile Layout Fix)
+           ============================================================ */
+        @media (max-width: 768px) {
+            .app-container { padding: 14px 14px 60px 14px; }
+            header.app-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+            }
+            .header-actions {
+                justify-content: flex-end;
+            }
+            .header-actions .btn {
+                width: 100%;
+            }
+            .tabs-nav {
+                max-width: 100%;
+            }
+            .leads-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            .filter-input {
+                width: 100%;
+            }
+            .leads-toolbar .btn {
+                width: 100%;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .table-container { display: none; }
+            .mobile-lead-cards { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- ======================================================
+         APP HEADER (Monocromático + PNG Oficial)
+         ====================================================== -->
+    <header class="app-header">
+        <a href="#" class="brand">
+            <img class="brand-logo-img" src="logo.png" alt="Allcance Logo" onerror="this.style.display='none'" />
+            <div class="brand-titles">
+                <div class="brand-name-row">
+                    <span class="brand-name">Allcance</span>
+                    <span class="brand-badge">PRO</span>
+                </div>
+                <span class="brand-subtitle">Prospecção & Inteligência de Leads</span>
+            </div>
+        </a>
+
+        <div class="header-actions">
+            <button class="btn btn-ghost btn-sm" onclick="openConfigModal()">
+                Configurações
+            </button>
+        </div>
+    </header>
+
+    <!-- ======================================================
+         NAVIGATION TABS
+         ====================================================== -->
+    <nav class="tabs-nav">
+        <button class="tab-btn active" id="btn-tab-search" onclick="switchTab('search', this)">
+            Nova Prospecção
+        </button>
+        <button class="tab-btn" id="btn-tab-leads" onclick="switchTab('leads', this)">
+            Leads
+            <span class="tab-count" id="leadsTabBadge">0</span>
+        </button>
+    </nav>
+
+    <!-- ======================================================
+         TAB 1: BUSCAR LEADS
+         ====================================================== -->
+    <div class="tab-pane active" id="pane-search">
+        <div class="card" style="max-width: 620px;">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Parâmetros de Busca</h2>
+                    <span class="card-desc">Extração de empresas no Google Maps via GitHub Actions</span>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label" for="searchNicho">Nicho de Atuação</label>
+                    <input class="form-input" id="searchNicho" placeholder="Ex: Clínica de Estética, Advogado, Restaurante..." oninput="validateSearchForm()" />
+                </div>
+
+                <div class="form-group full-width">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label class="form-label" for="searchCidadeInput" style="margin-bottom: 0;">Digite a cidade</label>
+                        <label style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+                            <input type="checkbox" id="chkBrasilTodo" style="accent-color: #ffffff; cursor: pointer;" onchange="toggleBrasilTodo(this.checked)" />
+                            Buscar em todo o Brasil
+                        </label>
+                    </div>
+                    <div style="position: relative; width: 100%;">
+                        <input class="form-input" id="searchCidadeInput" placeholder="Ex: Sorocaba, Belo Horizonte, Curitiba..." autocomplete="off" oninput="onCidadeInput(this.value)" />
+                        <div class="autocomplete-dropdown" id="cidadeSuggestions"></div>
+                    </div>
+                    <small id="cidadeHelp" style="font-size: 11px; color: var(--text-tertiary); margin-top: 6px; display: block;">
+                        * Digite e selecione uma cidade na lista para habilitar a busca.
+                    </small>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label" for="searchQtd">Quantidade de Leads</label>
+                    <input class="form-input" id="searchQtd" type="number" min="1" max="50" value="10" />
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                <button class="btn btn-primary" id="btnSearch" onclick="dispatchSearch()" disabled>
+                    Iniciar Varredura
+                </button>
+            </div>
+
+            <div class="search-feedback" id="searchFeedback">
+                <h4 id="feedbackTitle">Status</h4>
+                <p id="feedbackText">Aguardando...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================
+         TAB 2: MEUS LEADS
+         ====================================================== -->
+    <div class="tab-pane" id="pane-leads">
+        
+        <div class="leads-toolbar">
+            <div class="filter-group">
+                <input class="filter-input" id="filterSearch" placeholder="Buscar por nome, telefone..." oninput="applyFilters()" />
+                <input class="filter-input" id="filterNicho" placeholder="Filtrar nicho..." oninput="applyFilters()" />
+                <select class="form-select" id="filterStatus" style="width: auto; min-width: 140px; padding: 8px 30px 8px 12px; font-size: 12px;" onchange="applyFilters()">
+                    <option value="">Todos os status</option>
+                    <option value="novo">Novo</option>
+                    <option value="contatado">Contatado</option>
+                    <option value="convertido">Convertido</option>
+                    <option value="descartado">Descartado</option>
+                </select>
+            </div>
+
+            <button class="btn btn-secondary btn-sm" onclick="loadLeads()">
+                Atualizar Dados
+            </button>
+        </div>
+
+        <!-- Desktop View -->
+        <div class="table-container">
+            <table class="leads-table">
+                <thead>
+                    <tr>
+                        <th>Lead / Empresa</th>
+                        <th>Nicho & Região</th>
+                        <th>Site</th>
+                        <th>Instagram</th>
+                        <th>Status</th>
+                        <th>Proposta</th>
+                        <th style="text-align: right;">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="leadsTableBody">
+                    <!-- JS Rendering -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile View (Cards) -->
+        <div class="mobile-lead-cards" id="mobileCardsContainer">
+            <!-- JS Rendering -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-view" id="emptyState" style="display: none;">
+            <h3>Nenhum lead encontrado</h3>
+            <p>Dispare uma nova varredura ou redefina os filtros.</p>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('search', document.getElementById('btn-tab-search'))">
+                Nova Prospecção
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Config Modal -->
+<div class="config-overlay" id="configOverlay" onclick="if(event.target===this) closeConfigModal()">
+    <div class="config-modal">
+        <div class="config-modal-header">
+            <h3 class="config-modal-title">Configurações & Integrações</h3>
+            <button class="btn btn-ghost btn-xs" onclick="closeConfigModal()">✕</button>
+        </div>
+
+        <div class="form-grid" style="margin-bottom: 20px;">
+            <div class="form-group">
+                <label class="form-label" for="cfgSupabaseUrl">Supabase URL</label>
+                <input class="form-input" id="cfgSupabaseUrl" placeholder="https://xxx.supabase.co" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cfgSupabaseKey">Supabase Anon Key</label>
+                <input class="form-input" id="cfgSupabaseKey" placeholder="eyJ..." />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cfgGithubRepo">GitHub Repositório</label>
+                <input class="form-input" id="cfgGithubRepo" placeholder="vitorsoares5124-ux/allcance" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cfgGithubToken">GitHub Token (PAT)</label>
+                <input class="form-input" id="cfgGithubToken" type="password" placeholder="ghp_..." />
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label" for="cfgGeminiKey">Google Gemini API Key (Opcional)</label>
+                <input class="form-input" id="cfgGeminiKey" type="password" placeholder="AIzaSy..." />
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+            <button class="btn btn-secondary btn-sm" onclick="closeConfigModal()">Cancelar</button>
+            <button class="btn btn-primary btn-sm" onclick="saveConfig()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-viewport" id="toastViewport"></div>
+
+<script>
+let supabaseClient = null;
+let allLeads = [];
+let generatingLeads = new Set();
+
+function getConfig() {
+    return {
+        supabaseUrl:  localStorage.getItem('lp_supabase_url') || 'https://sfdjalgezqfppjesjuoh.supabase.co',
+        supabaseKey:  localStorage.getItem('lp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmZGphbGdlenFmcHBqZXNqdW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MDQwMTYsImV4cCI6MjEwMzk4MDAxNn0.jZp1fc5FmXjYo0ZUUUFGRjuia2DW9esfb_tLHVCuYJM',
+        githubRepo:   localStorage.getItem('lp_github_repo') || 'vitorsoares5124-ux/allcance',
+        githubToken:  localStorage.getItem('lp_github_token') || '',
+        geminiKey:    localStorage.getItem('lp_gemini_key') || '',
+    };
+}
+
+function saveConfig() {
+    localStorage.setItem('lp_supabase_url',  document.getElementById('cfgSupabaseUrl').value.trim());
+    localStorage.setItem('lp_supabase_key',  document.getElementById('cfgSupabaseKey').value.trim());
+    localStorage.setItem('lp_github_repo',   document.getElementById('cfgGithubRepo').value.trim());
+    localStorage.setItem('lp_github_token',  document.getElementById('cfgGithubToken').value.trim());
+    localStorage.setItem('lp_gemini_key',    document.getElementById('cfgGeminiKey').value.trim());
+    initSupabase(true);
+    closeConfigModal();
+    showToast('Configurações salvas!');
+}
+
+function loadConfigInputs() {
+    const cfg = getConfig();
+    document.getElementById('cfgSupabaseUrl').value = cfg.supabaseUrl;
+    document.getElementById('cfgSupabaseKey').value = cfg.supabaseKey;
+    document.getElementById('cfgGithubRepo').value = cfg.githubRepo;
+    document.getElementById('cfgGithubToken').value = cfg.githubToken;
+    document.getElementById('cfgGeminiKey').value = cfg.geminiKey;
+}
+
+function openConfigModal() {
+    loadConfigInputs();
+    document.getElementById('configOverlay').classList.add('open');
+}
+
+function closeConfigModal() {
+    document.getElementById('configOverlay').classList.remove('open');
+}
+
+function initSupabase(force = false) {
+    if (supabaseClient && !force) return true;
+    const cfg = getConfig();
+    if (cfg.supabaseUrl && cfg.supabaseKey && window.supabase) {
+        supabaseClient = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return true;
+    }
+    return false;
+}
+
+function switchTab(tabName, btnEl) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+    if (btnEl) btnEl.classList.add('active');
+    const targetPane = document.getElementById('pane-' + tabName);
+    if (targetPane) targetPane.classList.add('active');
+
+    if (tabName === 'leads') loadLeads();
+}
+
+const UF_MAP = {
+    'ACRE': 'AC', 'ALAGOAS': 'AL', 'AMAPA': 'AP', 'AMAZONAS': 'AM', 'BAHIA': 'BA',
+    'CEARA': 'CE', 'DISTRITO FEDERAL': 'DF', 'ESPIRITO SANTO': 'ES', 'GOIAS': 'GO',
+    'MARANHAO': 'MA', 'MATO GROSSO': 'MT', 'MATO GROSSO DO SUL': 'MS', 'MINAS GERAIS': 'MG',
+    'PARA': 'PA', 'PARAIBA': 'PB', 'PARANA': 'PR', 'PERNAMBUCO': 'PE', 'PIAUI': 'PI',
+    'RIO DE JANEIRO': 'RJ', 'RIO GRANDE DO NORTE': 'RN', 'RIO GRANDE DO SUL': 'RS',
+    'RONDONIA': 'RO', 'RORAIMA': 'RR', 'SANTA CATARINA': 'SC', 'SAO PAULO': 'SP',
+    'SERGIPE': 'SE', 'TOCANTINS': 'TO'
+};
+
+function getStateCode(stateName) {
+    if (!stateName) return '';
+    if (stateName.length === 2) return stateName.toUpperCase();
+    const normalized = stateName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    return UF_MAP[normalized] || stateName;
+}
+
+let cidadeDebounceTimer = null;
+let currentSuggestions = [];
+let selectedLocation = null;
+
+function validateSearchForm() {
+    const nicho = document.getElementById('searchNicho').value.trim();
+    const chkBrasil = document.getElementById('chkBrasilTodo').checked;
+    const btn = document.getElementById('btnSearch');
+    
+    const isValid = Boolean(nicho && (chkBrasil || selectedLocation));
+    if (btn) btn.disabled = !isValid;
+}
+
+function toggleBrasilTodo(checked) {
+    const cityInput = document.getElementById('searchCidadeInput');
+    const help = document.getElementById('cidadeHelp');
+    const dropdown = document.getElementById('cidadeSuggestions');
+
+    if (dropdown) dropdown.classList.remove('active');
+
+    if (checked) {
+        cityInput.value = "Brasil todo";
+        cityInput.disabled = true;
+        selectedLocation = { formatted: "Brasil todo", isBrasilTodo: true };
+        if (help) help.innerHTML = '<span style="color: #a1a1aa;">✓ Varredura configurada para todo o Brasil.</span>';
+    } else {
+        cityInput.value = "";
+        cityInput.disabled = false;
+        selectedLocation = null;
+        if (help) help.innerHTML = '* Digite e selecione uma cidade na lista para habilitar a busca.';
+    }
+    validateSearchForm();
+}
+
+function onCidadeInput(query) {
+    clearTimeout(cidadeDebounceTimer);
+    
+    selectedLocation = null;
+    validateSearchForm();
+
+    const dropdown = document.getElementById('cidadeSuggestions');
+    const help = document.getElementById('cidadeHelp');
+    if (help) help.innerHTML = '<span style="color: #ef4444;">* Selecione uma cidade da lista para habilitar a busca.</span>';
+
+    if (!query || query.trim().length < 2) {
+        dropdown.classList.remove('active');
+        dropdown.innerHTML = '';
+        currentSuggestions = [];
+        return;
+    }
+
+    cidadeDebounceTimer = setTimeout(async () => {
+        try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=br&format=json&addressdetails=1&limit=8`, {
+                headers: {
+                    'User-Agent': 'AllcanceLeadProspector/1.0 (contact@allcance.com)'
+                }
+            });
+
+            if (!res.ok) return;
+            const data = await res.json();
+            
+            if (!Array.isArray(data) || data.length === 0) {
+                dropdown.classList.remove('active');
+                currentSuggestions = [];
+                return;
+            }
+
+            const cityResults = [];
+            const addedKeys = new Set();
+
+            data.forEach(item => {
+                const addr = item.address || {};
+                const cityName = addr.city || addr.town || addr.municipality || addr.village || addr.city_district;
+                
+                if (!cityName) return;
+
+                const stateName = addr.state || '';
+                const uf = getStateCode(stateName);
+                const key = `${cityName.toLowerCase()}-${uf}`;
+
+                if (addedKeys.has(key)) return;
+                addedKeys.add(key);
+
+                const formatted = uf ? `${cityName}, ${uf}, Brasil` : `${cityName}, Brasil`;
+
+                cityResults.push({
+                    city: cityName,
+                    state: stateName,
+                    uf: uf,
+                    lat: item.lat,
+                    lon: item.lon,
+                    formatted: formatted
+                });
+            });
+
+            currentSuggestions = cityResults.slice(0, 5);
+
+            if (currentSuggestions.length === 0) {
+                dropdown.classList.remove('active');
+                return;
+            }
+
+            let html = '';
+            currentSuggestions.forEach((loc, idx) => {
+                html += `
+                    <div class="autocomplete-item" onclick="selectSuggestion(${idx})">
+                        <span><strong>${loc.city}</strong>${loc.uf ? ', ' + loc.uf : ''}</span>
+                        <span class="sub-text">Brasil</span>
+                    </div>
+                `;
+            });
+
+            dropdown.innerHTML = html;
+            dropdown.classList.add('active');
+        } catch (e) {
+            console.error('Erro na Nominatim API:', e);
+        }
+    }, 300);
+}
+
+function selectSuggestion(index) {
+    const loc = currentSuggestions[index];
+    if (!loc) return;
+
+    selectedLocation = loc;
+    document.getElementById('searchCidadeInput').value = loc.formatted;
+    
+    const dropdown = document.getElementById('cidadeSuggestions');
+    if (dropdown) dropdown.classList.remove('active');
+
+    const help = document.getElementById('cidadeHelp');
+    if (help) {
+        help.innerHTML = `<span style="color: #22c55e;">✓ Cidade confirmada: ${loc.formatted}</span>`;
+    }
+
+    validateSearchForm();
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#searchCidadeInput') && !e.target.closest('#cidadeSuggestions')) {
+        const dropdown = document.getElementById('cidadeSuggestions');
+        if (dropdown) dropdown.classList.remove('active');
+    }
+});
+
+async function dispatchSearch() {
+    const cfg = getConfig();
+
+    if (!cfg.githubRepo || !cfg.githubToken) {
+        showToast('Configure o GitHub Token nas configurações.', 'error');
+        openConfigModal();
+        return;
+    }
+
+    const nicho = document.getElementById('searchNicho').value.trim();
+    const chkBrasil = document.getElementById('chkBrasilTodo').checked;
+    
+    let regiao = '';
+    let lat = null;
+    let lon = null;
+
+    if (chkBrasil) {
+        regiao = 'Brasil todo';
+    } else if (selectedLocation) {
+        regiao = selectedLocation.formatted;
+        lat = selectedLocation.lat;
+        lon = selectedLocation.lon;
+    }
+
+    const quantidade = parseInt(document.getElementById('searchQtd').value) || 10;
+
+    if (!nicho) {
+        showToast('Informe o nicho de atuação.', 'error');
+        document.getElementById('searchNicho').focus();
+        return;
+    }
+    if (!regiao) {
+        showToast('Selecione uma cidade válida na lista.', 'error');
+        document.getElementById('searchCidadeInput').focus();
+        return;
+    }
+
+    const btn = document.getElementById('btnSearch');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Disparando...';
+
+    showFeedback('Executando...', 'Disparando workflow no GitHub Actions...');
+
+    try {
+        const payloadInputs = {
+            nicho: nicho,
+            regiao: regiao,
+            quantidade: String(quantidade)
+        };
+
+        const response = await fetch(
+            `https://api.github.com/repos/${cfg.githubRepo}/actions/workflows/scraper.yml/dispatches`,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `token ${cfg.githubToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ref: 'main',
+                    inputs: payloadInputs
+                })
+            }
+        );
+
+        if (response.status === 204 || response.ok) {
+            showFeedback(
+                'Varredura Iniciada',
+                `Extraindo ${quantidade} leads de "${nicho}" em "${regiao}". Aguarde alguns instantes e veja na aba "Leads Capturados".`
+            );
+            showToast('Workflow iniciado no GitHub Actions!');
+        } else {
+            const err = await response.json();
+            throw new Error(err.message || response.statusText);
+        }
+    } catch (err) {
+        showFeedback('Erro no Disparo', err.message);
+        showToast(`Erro: ${err.message}`, 'error');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = 'Iniciar Varredura';
+}
+
+function showFeedback(title, message) {
+    const box = document.getElementById('searchFeedback');
+    document.getElementById('feedbackTitle').textContent = title;
+    document.getElementById('feedbackText').innerHTML = message;
+    box.className = 'search-feedback visible';
+}
+
+async function loadLeads() {
+    if (!initSupabase()) {
+        showToast('Configure o Supabase.', 'error');
+        return;
+    }
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('leads')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        allLeads = data || [];
+        document.getElementById('leadsTabBadge').textContent = allLeads.length;
+        applyFilters();
+    } catch (err) {
+        showToast(`Erro ao carregar: ${err.message}`, 'error');
+    }
+}
+
+async function generateProposal(leadId) {
+    const cfg = getConfig();
+
+    if (!cfg.githubRepo || !cfg.githubToken) {
+        showToast('Configure o GitHub Token.', 'error');
+        openConfigModal();
+        return;
+    }
+
+    const lead = allLeads.find(l => l.id === leadId);
+    const leadName = lead ? lead.nome : 'Lead';
+
+    generatingLeads.add(leadId);
+    applyFilters();
+    showToast(`Gerando proposta para "${leadName}"...`);
+
+    try {
+        const response = await fetch(
+            `https://api.github.com/repos/${cfg.githubRepo}/actions/workflows/generate_proposal.yml/dispatches`,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `token ${cfg.githubToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ref: 'main',
+                    inputs: { lead_id: leadId }
+                })
+            }
+        );
+
+        if (!response.ok && response.status !== 204) {
+            const err = await response.json();
+            throw new Error(err.message || response.statusText);
+        }
+
+        showToast('Analisando site e gerando PDF (~25s)...');
+        pollProposalReady(leadId);
+
+    } catch (err) {
+        generatingLeads.delete(leadId);
+        applyFilters();
+        showToast(`Erro: ${err.message}`, 'error');
+    }
+}
+
+function pollProposalReady(leadId) {
+    let attempts = 0;
+    const maxAttempts = 35;
+    const interval = setInterval(async () => {
+        attempts++;
+        if (attempts > maxAttempts) {
+            clearInterval(interval);
+            generatingLeads.delete(leadId);
+            applyFilters();
+            showToast('Tempo limite excedido.', 'error');
+            return;
+        }
+
+        if (!supabaseClient) return;
+
+        try {
+            const { data, error } = await supabaseClient
+                .from('leads')
+                .select('id, proposta_pdf_url, proposta_status')
+                .eq('id', leadId)
+                .single();
+
+            if (data && data.proposta_pdf_url) {
+                clearInterval(interval);
+                generatingLeads.delete(leadId);
+                const lead = allLeads.find(l => l.id === leadId);
+                if (lead) {
+                    lead.proposta_pdf_url = data.proposta_pdf_url;
+                    lead.proposta_status = data.proposta_status;
+                }
+                applyFilters();
+                showToast('Proposta pronta para download!');
+            }
+        } catch (e) {}
+    }, 4000);
+}
+
+function applyFilters() {
+    const query = (document.getElementById('filterSearch')?.value || '').toLowerCase();
+    const nichoFilter = (document.getElementById('filterNicho')?.value || '').toLowerCase();
+    const statusFilter = document.getElementById('filterStatus')?.value || '';
+
+    let filtered = allLeads;
+
+    if (query) {
+        filtered = filtered.filter(l => 
+            (l.nome && l.nome.toLowerCase().includes(query)) ||
+            (l.telefone && l.telefone.includes(query)) ||
+            (l.regiao && l.regiao.toLowerCase().includes(query))
+        );
+    }
+    if (nichoFilter) {
+        filtered = filtered.filter(l => l.nicho && l.nicho.toLowerCase().includes(nichoFilter));
+    }
+    if (statusFilter) {
+        filtered = filtered.filter(l => l.status === statusFilter);
+    }
+
+    renderLeads(filtered);
+}
+
+let contactedLeads = new Set(JSON.parse(localStorage.getItem('lp_contacted_leads') || '[]'));
+
+function formatExternalUrl(url) {
+    if (!url) return '';
+    const trimmed = url.trim();
+    if (/^https?:\/\//i.test(trimmed)) {
+        return trimmed;
+    }
+    return 'https://' + trimmed;
+}
+
+function openWhatsApp(leadId, phone) {
+    const waPhone = (phone || '').replace(/[^\d]/g, '');
+    if (!waPhone) {
+        showToast('Telefone não informado.', 'error');
+        return;
+    }
+
+    // 1. Marca instantaneamente local e na memória
+    contactedLeads.add(leadId);
+    try {
+        localStorage.setItem('lp_contacted_leads', JSON.stringify(Array.from(contactedLeads)));
+    } catch(e) {}
+
+    const lead = allLeads.find(l => l.id === leadId);
+    if (lead && (!lead.status || lead.status === 'novo')) {
+        lead.status = 'contatado';
+    }
+
+    // 2. Re-renderiza o DOM instantaneamente em tempo real (0ms)
+    applyFilters();
+
+    // 3. Sincroniza com Supabase em background
+    if (supabaseClient && lead) {
+        supabaseClient
+            .from('leads')
+            .update({ status: 'contatado' })
+            .eq('id', leadId)
+            .then(() => {})
+            .catch(err => console.error('Erro ao sincronizar status:', err));
+    }
+
+    // 4. Abre o WhatsApp
+    window.open(`https://wa.me/${waPhone}`, '_blank');
+}
+
+function renderLeads(leads) {
+    const tbody = document.getElementById('leadsTableBody');
+    const mobileContainer = document.getElementById('mobileCardsContainer');
+    const emptyState = document.getElementById('emptyState');
+
+    if (leads.length === 0) {
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
+        emptyState.style.display = 'flex';
+        return;
+    }
+
+    emptyState.style.display = 'none';
+
+    // Desktop
+    tbody.innerHTML = leads.map(lead => {
+        const phone = lead.telefone || '';
+        const isGenerating = generatingLeads.has(lead.id);
+        const isContacted = lead.status === 'contatado' || lead.status === 'convertido' || contactedLeads.has(lead.id);
+        const waBtnClass = isContacted ? 'btn-whatsapp-contacted' : 'btn-whatsapp';
+        const waBtnText = isContacted ? '✓ Prospectado' : 'WhatsApp';
+
+        let proposalAction = '';
+        if (isGenerating) {
+            proposalAction = `<button class="btn btn-secondary btn-xs" disabled><span class="spinner"></span> Gerando...</button>`;
+        } else if (lead.proposta_pdf_url) {
+            proposalAction = `
+                <div style="display:flex; gap:4px; align-items:center;">
+                    <a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-xs">PDF</a>
+                    <button class="btn btn-ghost btn-xs" title="Regerar" onclick="generateProposal('${lead.id}')">🔄</button>
+                </div>
+            `;
+        } else {
+            proposalAction = `<button class="btn btn-generate btn-xs" onclick="generateProposal('${lead.id}')">Gerar</button>`;
+        }
+
+        return `
+            <tr>
+                <td>
+                    <div class="lead-primary-cell">
+                        <span class="lead-company-name" title="${esc(lead.nome)}">${esc(lead.nome)}</span>
+                        <span class="lead-company-phone">${esc(phone)}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="lead-context-cell">
+                        <span class="lead-nicho-text">${esc(lead.nicho)}</span>
+                        <span class="lead-region-text">${esc(lead.regiao)}</span>
+                    </div>
+                </td>
+                <td>
+                    ${lead.tem_site && lead.site_url
+                        ? `<a href="${esc(formatExternalUrl(lead.site_url))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive" title="Abrir site: ${esc(lead.site_url)}">✓ Site</a>`
+                        : `<span class="status-badge badge-negative">Sem Site</span>`
+                    }
+                </td>
+                <td>
+                    ${lead.tem_instagram && lead.instagram_handle
+                        ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive">${esc(lead.instagram_handle)}</a>`
+                        : `<span class="status-badge badge-negative">Inativo</span>`
+                    }
+                </td>
+                <td>
+                    <select class="lead-status-dropdown" onchange="updateLeadStatus('${lead.id}', this.value)">
+                        <option value="novo"       ${lead.status==='novo'       ? 'selected':''}>Novo</option>
+                        <option value="contatado"  ${lead.status==='contatado'  ? 'selected':''}>Contatado</option>
+                        <option value="convertido" ${lead.status==='convertido' ? 'selected':''}>Convertido</option>
+                        <option value="descartado" ${lead.status==='descartado' ? 'selected':''}>Descartado</option>
+                    </select>
+                </td>
+                <td>${proposalAction}</td>
+                <td style="text-align: right;">
+                    <button onclick="openWhatsApp('${lead.id}', '${phone}')" class="btn ${waBtnClass} btn-xs" title="Abrir WhatsApp">
+                        ${waBtnText}
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    // Mobile
+    mobileContainer.innerHTML = leads.map(lead => {
+        const phone = lead.telefone || '';
+        const isGenerating = generatingLeads.has(lead.id);
+        const isContacted = lead.status === 'contatado' || lead.status === 'convertido' || contactedLeads.has(lead.id);
+        const waBtnClass = isContacted ? 'btn-whatsapp-contacted' : 'btn-whatsapp';
+        const waBtnText = isContacted ? '✓ Prospectado' : 'WhatsApp';
+
+        let proposalBtn = '';
+        if (isGenerating) {
+            proposalBtn = `<button class="btn btn-secondary btn-sm" disabled><span class="spinner"></span> Gerando...</button>`;
+        } else if (lead.proposta_pdf_url) {
+            proposalBtn = `<a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-sm">Baixar PDF</a>`;
+        } else {
+            proposalBtn = `<button class="btn btn-generate btn-sm" onclick="generateProposal('${lead.id}')">Gerar Proposta</button>`;
+        }
+
+        return `
+            <div class="mobile-lead-card">
+                <div class="mobile-lead-card-header">
+                    <div>
+                        <div class="lead-company-name" title="${esc(lead.nome)}">${esc(lead.nome)}</div>
+                        <div class="lead-company-phone">${esc(phone)}</div>
+                    </div>
+                    <select class="lead-status-dropdown" onchange="updateLeadStatus('${lead.id}', this.value)">
+                        <option value="novo"       ${lead.status==='novo'       ? 'selected':''}>Novo</option>
+                        <option value="contatado"  ${lead.status==='contatado'  ? 'selected':''}>Contatado</option>
+                        <option value="convertido" ${lead.status==='convertido' ? 'selected':''}>Convertido</option>
+                        <option value="descartado" ${lead.status==='descartado' ? 'selected':''}>Descartado</option>
+                    </select>
+                </div>
+
+                <div class="mobile-lead-meta-row">
+                    <span class="mobile-tag">${esc(lead.nicho)}</span>
+                    <span class="mobile-tag">${esc(lead.regiao)}</span>
+                    ${lead.tem_site && lead.site_url ? `<a href="${esc(formatExternalUrl(lead.site_url))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive" title="Abrir site">✓ Site</a>` : ''}
+                    ${lead.tem_instagram && lead.instagram_handle ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive">✓ Insta</a>` : ''}
+                </div>
+
+                <div class="mobile-lead-actions-row">
+                    ${proposalBtn}
+                    <button onclick="openWhatsApp('${lead.id}', '${phone}')" class="btn ${waBtnClass} btn-sm">
+                        ${waBtnText}
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+async function updateLeadStatus(leadId, newStatus) {
+    const lead = allLeads.find(l => l.id === leadId);
+    if (lead) {
+        lead.status = newStatus;
+        if (newStatus === 'contatado' || newStatus === 'convertido') {
+            contactedLeads.add(leadId);
+        } else if (newStatus === 'novo') {
+            contactedLeads.delete(leadId);
+        }
+        try {
+            localStorage.setItem('lp_contacted_leads', JSON.stringify(Array.from(contactedLeads)));
+        } catch(e) {}
+    }
+
+    // Atualiza a interface instantaneamente
+    applyFilters();
+
+    if (!supabaseClient) return;
+
+    try {
+        const { error } = await supabaseClient
+            .from('leads')
+            .update({ status: newStatus })
+            .eq('id', leadId);
+
+        if (error) throw error;
+        showToast(`Status atualizado para "${newStatus}"`);
+    } catch (err) {
+        showToast(`Erro ao salvar: ${err.message}`, 'error');
+    }
+}
+
+function esc(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toastViewport');
+    const toast = document.createElement('div');
+    toast.className = 'toast-item' + (type === 'error' ? ' error' : '');
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'all 0.2s ease-out';
+        setTimeout(() => toast.remove(), 200);
+    }, 3000);
+}
+
+loadConfigInputs();
+initSupabase();
+loadLeads();
+</script>
+</body>
+</html>
