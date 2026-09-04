@@ -279,6 +279,20 @@
             background: #e4e4e7;
         }
 
+        /* WhatsApp: Estado Prospectado (Cinza Escuro) */
+        .btn-whatsapp-contacted {
+            background: #18181b !important;
+            color: #a1a1aa !important;
+            border: 1px solid #27272a !important;
+            font-weight: 600;
+        }
+
+        .btn-whatsapp-contacted:hover {
+            background: #27272a !important;
+            border-color: #3f3f46 !important;
+            color: #ffffff !important;
+        }
+
         /* Gerar Proposta */
         .btn-generate {
             background: var(--bg-surface-elev);
@@ -1245,6 +1259,39 @@ function applyFilters() {
     renderLeads(filtered);
 }
 
+let contactedLeads = new Set(JSON.parse(localStorage.getItem('lp_contacted_leads') || '[]'));
+
+function formatExternalUrl(url) {
+    if (!url) return '';
+    const trimmed = url.trim();
+    if (/^https?:\/\//i.test(trimmed)) {
+        return trimmed;
+    }
+    return 'https://' + trimmed;
+}
+
+function openWhatsApp(leadId, phone) {
+    const waPhone = (phone || '').replace(/[^\d]/g, '');
+    if (!waPhone) {
+        showToast('Telefone não informado.', 'error');
+        return;
+    }
+
+    contactedLeads.add(leadId);
+    try {
+        localStorage.setItem('lp_contacted_leads', JSON.stringify(Array.from(contactedLeads)));
+    } catch(e) {}
+
+    const lead = allLeads.find(l => l.id === leadId);
+    if (lead && (!lead.status || lead.status === 'novo')) {
+        updateLeadStatus(leadId, 'contatado');
+    } else {
+        applyFilters();
+    }
+
+    window.open(`https://wa.me/${waPhone}`, '_blank');
+}
+
 function renderLeads(leads) {
     const tbody = document.getElementById('leadsTableBody');
     const mobileContainer = document.getElementById('mobileCardsContainer');
@@ -1262,8 +1309,10 @@ function renderLeads(leads) {
     // Desktop
     tbody.innerHTML = leads.map(lead => {
         const phone = lead.telefone || '';
-        const waPhone = phone.replace(/[^\d]/g, '');
         const isGenerating = generatingLeads.has(lead.id);
+        const isContacted = lead.status === 'contatado' || lead.status === 'convertido' || contactedLeads.has(lead.id);
+        const waBtnClass = isContacted ? 'btn-whatsapp-contacted' : 'btn-whatsapp';
+        const waBtnText = isContacted ? '✓ Prospectado' : 'WhatsApp';
 
         let proposalAction = '';
         if (isGenerating) {
@@ -1283,7 +1332,7 @@ function renderLeads(leads) {
             <tr>
                 <td>
                     <div class="lead-primary-cell">
-                        <span class="lead-company-name">${esc(lead.nome)}</span>
+                        <span class="lead-company-name" title="${esc(lead.nome)}">${esc(lead.nome)}</span>
                         <span class="lead-company-phone">${esc(phone)}</span>
                     </div>
                 </td>
@@ -1295,13 +1344,13 @@ function renderLeads(leads) {
                 </td>
                 <td>
                     ${lead.tem_site && lead.site_url
-                        ? `<a href="${esc(lead.site_url)}" target="_blank" class="status-badge badge-positive">✓ Site</a>`
+                        ? `<a href="${esc(formatExternalUrl(lead.site_url))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive" title="Abrir site: ${esc(lead.site_url)}">✓ Site</a>`
                         : `<span class="status-badge badge-negative">Sem Site</span>`
                     }
                 </td>
                 <td>
                     ${lead.tem_instagram && lead.instagram_handle
-                        ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" class="status-badge badge-positive">${esc(lead.instagram_handle)}</a>`
+                        ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive">${esc(lead.instagram_handle)}</a>`
                         : `<span class="status-badge badge-negative">Inativo</span>`
                     }
                 </td>
@@ -1315,7 +1364,9 @@ function renderLeads(leads) {
                 </td>
                 <td>${proposalAction}</td>
                 <td style="text-align: right;">
-                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-xs">WhatsApp</a>
+                    <button onclick="openWhatsApp('${lead.id}', '${phone}')" class="btn ${waBtnClass} btn-xs" title="Abrir WhatsApp">
+                        ${waBtnText}
+                    </button>
                 </td>
             </tr>
         `;
@@ -1324,8 +1375,10 @@ function renderLeads(leads) {
     // Mobile
     mobileContainer.innerHTML = leads.map(lead => {
         const phone = lead.telefone || '';
-        const waPhone = phone.replace(/[^\d]/g, '');
         const isGenerating = generatingLeads.has(lead.id);
+        const isContacted = lead.status === 'contatado' || lead.status === 'convertido' || contactedLeads.has(lead.id);
+        const waBtnClass = isContacted ? 'btn-whatsapp-contacted' : 'btn-whatsapp';
+        const waBtnText = isContacted ? '✓ Prospectado' : 'WhatsApp';
 
         let proposalBtn = '';
         if (isGenerating) {
@@ -1340,7 +1393,7 @@ function renderLeads(leads) {
             <div class="mobile-lead-card">
                 <div class="mobile-lead-card-header">
                     <div>
-                        <div class="lead-company-name">${esc(lead.nome)}</div>
+                        <div class="lead-company-name" title="${esc(lead.nome)}">${esc(lead.nome)}</div>
                         <div class="lead-company-phone">${esc(phone)}</div>
                     </div>
                     <select class="lead-status-dropdown" onchange="updateLeadStatus('${lead.id}', this.value)">
@@ -1354,15 +1407,15 @@ function renderLeads(leads) {
                 <div class="mobile-lead-meta-row">
                     <span class="mobile-tag">${esc(lead.nicho)}</span>
                     <span class="mobile-tag">${esc(lead.regiao)}</span>
-                    ${lead.tem_site ? `<span class="status-badge badge-positive">✓ Site</span>` : ''}
-                    ${lead.tem_instagram ? `<span class="status-badge badge-positive">✓ Insta</span>` : ''}
+                    ${lead.tem_site && lead.site_url ? `<a href="${esc(formatExternalUrl(lead.site_url))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive" title="Abrir site">✓ Site</a>` : ''}
+                    ${lead.tem_instagram && lead.instagram_handle ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" rel="noopener noreferrer" class="status-badge badge-positive">✓ Insta</a>` : ''}
                 </div>
 
                 <div class="mobile-lead-actions-row">
                     ${proposalBtn}
-                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-sm">
-                        WhatsApp
-                    </a>
+                    <button onclick="openWhatsApp('${lead.id}', '${phone}')" class="btn ${waBtnClass} btn-sm">
+                        ${waBtnText}
+                    </button>
                 </div>
             </div>
         `;
