@@ -46,19 +46,20 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        body {
+        html, body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-base);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.5;
             overflow-x: hidden;
+            overscroll-behavior-y: none;
         }
 
         .app-container {
             max-width: 1140px;
             margin: 0 auto;
-            padding: 24px 20px 80px 20px;
+            padding: 20px 16px 40px 16px;
         }
 
         /* ============================================================
@@ -865,7 +866,7 @@
                     <input class="form-input" id="searchNicho" placeholder="Ex: Clínica de Estética, Advogado, Restaurante..." oninput="validateSearchForm()" />
                 </div>
 
-                <div class="form-group autocomplete-container full-width">
+                <div class="form-group full-width">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <label class="form-label" for="searchCidadeInput" style="margin-bottom: 0;">Digite a cidade</label>
                         <label style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
@@ -873,9 +874,11 @@
                             Buscar em todo o Brasil
                         </label>
                     </div>
-                    <input class="form-input" id="searchCidadeInput" placeholder="Ex: Sorocaba, Belo Horizonte, Curitiba..." autocomplete="off" oninput="onCidadeInput(this.value)" />
-                    <div class="autocomplete-dropdown" id="cidadeSuggestions"></div>
-                    <small id="cidadeHelp" style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px; display: block;">
+                    <div style="position: relative; width: 100%;">
+                        <input class="form-input" id="searchCidadeInput" placeholder="Ex: Sorocaba, Belo Horizonte, Curitiba..." autocomplete="off" oninput="onCidadeInput(this.value)" />
+                        <div class="autocomplete-dropdown" id="cidadeSuggestions"></div>
+                    </div>
+                    <small id="cidadeHelp" style="font-size: 11px; color: var(--text-tertiary); margin-top: 6px; display: block;">
                         * Digite e selecione uma cidade na lista para habilitar a busca.
                     </small>
                 </div>
@@ -1224,7 +1227,7 @@ function selectSuggestion(index) {
 }
 
 document.addEventListener('click', function(e) {
-    if (!e.target.closest('.autocomplete-container')) {
+    if (!e.target.closest('#searchCidadeInput') && !e.target.closest('#cidadeSuggestions')) {
         const dropdown = document.getElementById('cidadeSuggestions');
         if (dropdown) dropdown.classList.remove('active');
     }
