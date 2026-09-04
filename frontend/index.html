@@ -3,541 +3,918 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lead Prospector</title>
+    <title>Allcance • Prospecção & Inteligência de Leads</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ============================================================
-           Reset & Base
+           DESIGN TOKENS & SYSTEM VARIABLES (Vercel + Linear + Nubank)
            ============================================================ */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         :root {
-            --bg-primary:   #000000;
-            --bg-secondary: #0a0a0a;
-            --bg-card:      #111111;
-            --bg-input:     #1a1a1a;
-            --border:       #2a2a2a;
-            --border-hover: #444444;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1a1;
-            --text-muted:   #666666;
-            --accent-green: #00c853;
-            --accent-red:   #ff4444;
-            --accent-blue:  #2196f3;
-            --radius:       8px;
-            --radius-lg:    12px;
-        }
+            /* Superfícies & Profundidade */
+            --bg-base:          #070709;
+            --bg-surface:       #0d0d11;
+            --bg-surface-elev:  #131318;
+            --bg-surface-hover: #181820;
+            --bg-glass:         rgba(13, 13, 17, 0.75);
+            --bg-input:         #0a0a0e;
+            
+            /* Bordas & Divisores */
+            --border-subtle:    rgba(255, 255, 255, 0.07);
+            --border-medium:    rgba(255, 255, 255, 0.12);
+            --border-focus:     rgba(139, 92, 246, 0.5);
+            --border-highlight: rgba(255, 255, 255, 0.2);
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.5;
+            /* Tipografia & Contraste */
+            --text-primary:     #f4f4f6;
+            --text-secondary:   #9ca3af;
+            --text-tertiary:    #6b7280;
+            --text-muted:       #4b5563;
+
+            /* Brand & Accent (Allcance Violet + Emerald) */
+            --brand-primary:       #8b5cf6;
+            --brand-primary-hover: #7c3aed;
+            --brand-glow:          rgba(139, 92, 246, 0.25);
+            --brand-gradient:      linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #6d28d9 100%);
+            
+            --accent-emerald:      #10b981;
+            --accent-emerald-bg:   rgba(16, 185, 129, 0.12);
+            --accent-emerald-border: rgba(16, 185, 129, 0.25);
+            
+            --accent-amber:        #f59e0b;
+            --accent-amber-bg:     rgba(245, 158, 11, 0.12);
+            --accent-amber-border: rgba(245, 158, 11, 0.25);
+
+            --accent-rose:         #f43f5e;
+            --accent-rose-bg:      rgba(244, 63, 94, 0.12);
+            --accent-rose-border:  rgba(244, 63, 94, 0.25);
+
+            --accent-sky:          #0ea5e9;
+            --accent-sky-bg:       rgba(14, 165, 233, 0.12);
+            --accent-sky-border:   rgba(14, 165, 233, 0.25);
+
+            /* Raios & Espaçamento */
+            --radius-sm:  6px;
+            --radius-md:  10px;
+            --radius-lg:  14px;
+            --radius-xl:  20px;
+            --radius-pill: 9999px;
+
+            /* Sombras & Efeitos */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-subtle);
+            --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 0 1px var(--border-medium);
+            --shadow-glow: 0 0 24px var(--brand-glow);
         }
 
         /* ============================================================
-           Layout
+           RESET & GLOBAL BASE
            ============================================================ */
-        .app {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 24px 20px;
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        header {
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.12), transparent),
+                radial-gradient(ellipse 40% 30% at 90% 20%, rgba(14, 165, 233, 0.05), transparent);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: #26262e; border-radius: var(--radius-pill); }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f4e; }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 24px 80px 24px;
+        }
+
+        /* ============================================================
+           HEADER & BRAND IDENTITY
+           ============================================================ */
+        header.app-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 32px;
+            padding: 14px 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-sm);
         }
 
-        .logo {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .brand-logo-frame {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, #1c1c24 0%, #0d0d12 100%);
+            border: 1px solid var(--border-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo-frame::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
+            pointer-events: none;
+        }
+
+        .brand-logo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
+        }
+
+        .brand-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-name .badge-pro {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: var(--radius-pill);
+            background: var(--brand-glow);
+            color: #c4b5fd;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            letter-spacing: -0.1px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ============================================================
+           TAB NAVIGATION (Linear Style)
+           ============================================================ */
+        .tabs-nav {
+            display: inline-flex;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 24px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-surface-elev);
+            color: #ffffff;
+            border: 1px solid var(--border-medium);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .tab-btn .tab-count {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-count {
+            background: var(--brand-glow);
+            color: #c4b5fd;
+        }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; animation: fadeIn 0.25s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           BUTTON SYSTEM (Vercel & Linear Standard)
+           ============================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 9px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        /* Botão Primário (Linear / Vercel White Gradient) */
+        .btn-primary {
+            background: linear-gradient(180deg, #ffffff 0%, #e2e2e8 100%);
+            color: #09090b;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Botão Brand / Destaque */
+        .btn-brand {
+            background: var(--brand-gradient);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.35);
+        }
+
+        .btn-brand:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 18px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Botão Secundário */
+        .btn-secondary {
+            background: var(--bg-surface-elev);
+            color: var(--text-primary);
+            border: 1px solid var(--border-medium);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--border-highlight);
+            color: #ffffff;
+        }
+
+        /* Botão Ghost / Outline */
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-surface-elev);
+            color: var(--text-primary);
+            border-color: var(--border-medium);
+        }
+
+        /* Botão WhatsApp */
+        .btn-whatsapp {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-whatsapp:hover {
+            background: #10b981;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+        }
+
+        /* Botão Proposta - Gerar */
+        .btn-generate {
+            background: linear-gradient(180deg, #242432 0%, #171722 100%);
+            color: #d8b4fe;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-generate:hover {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.6);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 12px rgba(168, 85, 247, 0.25);
+        }
+
+        /* Botão Proposta - Baixar */
+        .btn-download {
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-download:hover {
+            background: #3b82f6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
+        }
+
+        /* Variantes de Tamanho */
+        .btn-xs { padding: 4px 8px; font-size: 11px; border-radius: var(--radius-sm); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); }
+        .btn-lg { padding: 12px 24px; font-size: 14px; }
+        .btn-icon { padding: 8px; border-radius: var(--radius-md); }
+
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ============================================================
+           SURFACES & CARDS
+           ============================================================ */
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card-header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #ffffff 0%, #c0c0c0 100%);
+        .card-icon-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface-elev);
+            border: 1px solid var(--border-medium);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            color: var(--brand-primary);
+            font-size: 15px;
         }
 
-        .logo h1 {
-            font-size: 20px;
+        .card-title {
+            font-size: 15px;
             font-weight: 700;
-            background: linear-gradient(90deg, #ffffff 0%, #b0b0b0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #ffffff;
+            letter-spacing: -0.2px;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* ============================================================
-           Tabs
-           ============================================================ */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 32px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tab {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            position: relative;
-            transition: color 0.2s;
-            font-family: inherit;
-        }
-
-        .tab:hover { color: var(--text-secondary); }
-
-        .tab.active {
-            color: var(--text-primary);
-        }
-
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #ffffff, #888888);
-            border-radius: 1px;
-        }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* ============================================================
-           Buttons
-           ============================================================ */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #ffffff 0%, #d4d4d4 100%);
-            color: #000000;
-            box-shadow: 0 1px 2px rgba(255,255,255,0.1);
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #f0f0f0 0%, #c0c0c0 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255,255,255,0.15);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--border-hover);
-            color: var(--text-primary);
-            background: var(--bg-input);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
+        .card-desc {
             font-size: 12px;
-        }
-
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-            color: #ffffff;
-        }
-
-        .btn-whatsapp:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-proposal {
-            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
-            color: #000000;
-            font-weight: 600;
-            border: 1px solid #ffffff;
-        }
-
-        .btn-proposal:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
-            background: #ffffff;
-        }
-
-        .btn-proposal-ready {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: #ffffff;
-        }
-
-        .btn-proposal-ready:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-icon {
-            padding: 8px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-icon:hover {
-            border-color: var(--border-hover);
-            color: var(--text-primary);
+            color: var(--text-tertiary);
         }
 
         /* ============================================================
-           Forms
+           FORMS & INPUT SYSTEM
            ============================================================ */
-        .form-group {
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
             margin-bottom: 20px;
         }
 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
         .form-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 12px;
+            font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .form-input, .form-select {
             width: 100%;
-            padding: 10px 14px;
             background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            font-size: 13px;
             color: var(--text-primary);
-            font-size: 14px;
             font-family: inherit;
-            transition: border-color 0.2s;
             outline: none;
+            transition: all 0.2s;
         }
 
         .form-input:focus, .form-select:focus {
-            border-color: #555;
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+            background: #0e0e14;
         }
 
         .form-input::placeholder {
             color: var(--text-muted);
         }
 
-        .form-select option {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .form-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 16px;
-            align-items: end;
-        }
-
-        /* ============================================================
-           Cards
-           ============================================================ */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ============================================================
-           Search Panel
-           ============================================================ */
-        .search-panel {
-            max-width: 600px;
-        }
-
-        .search-panel .card {
-            margin-bottom: 20px;
-        }
-
-        .search-status {
-            margin-top: 16px;
-            padding: 16px;
-            border-radius: var(--radius);
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            display: none;
-        }
-
-        .search-status.visible { display: block; }
-
-        .search-status.success {
-            border-color: #1a3a1a;
-            background: #0a1f0a;
-        }
-
-        .search-status.error {
-            border-color: #3a1a1a;
-            background: #1f0a0a;
-        }
-
-        .search-status .status-text {
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ============================================================
-           Config Panel (collapsible)
-           ============================================================ */
-        .config-panel {
-            margin-bottom: 24px;
-        }
-
-        .config-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
             cursor: pointer;
-            font-size: 13px;
-            color: var(--text-muted);
-            padding: 8px 0;
-            border: none;
-            background: none;
-            font-family: inherit;
-            transition: color 0.2s;
         }
 
-        .config-toggle:hover { color: var(--text-secondary); }
+        .form-select option {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            padding: 8px;
+        }
 
-        .config-body {
+        /* Status de busca */
+        .search-feedback {
+            margin-top: 16px;
+            padding: 14px 18px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface-elev);
+            border: 1px solid var(--border-medium);
             display: none;
-            padding-top: 12px;
+            animation: fadeIn 0.2s ease-out;
         }
 
-        .config-body.open { display: block; }
+        .search-feedback.visible { display: flex; align-items: flex-start; gap: 12px; }
 
-        .config-body .form-input {
-            font-family: 'Courier New', monospace;
+        .search-feedback.success {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+
+        .search-feedback.error {
+            background: rgba(244, 63, 94, 0.08);
+            border-color: rgba(244, 63, 94, 0.25);
+        }
+
+        .feedback-content h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .feedback-content p {
             font-size: 12px;
+            color: var(--text-secondary);
         }
 
         /* ============================================================
-           Leads Table
+           CONFIG MODAL / DRAWER (Estilo Vercel Settings)
            ============================================================ */
-        .leads-header {
+        .config-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .config-overlay.open {
+            display: flex;
+            animation: fadeIn 0.15s ease-out;
+        }
+
+        .config-modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 580px;
+            padding: 28px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .config-modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
         }
 
-        .leads-count {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .leads-count strong {
-            color: var(--text-primary);
-        }
-
-        .filters {
+        .config-modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
             display: flex;
+            align-items: center;
             gap: 8px;
-            margin-bottom: 20px;
+        }
+
+        /* ============================================================
+           LEADS TABLE & DATA PRESENTATION (Linear Standard)
+           ============================================================ */
+        .leads-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
 
-        .filters .form-input,
-        .filters .form-select {
-            width: auto;
-            min-width: 160px;
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .filter-input {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             padding: 8px 12px;
-            font-size: 13px;
+            font-size: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+            min-width: 180px;
+            transition: all 0.2s;
         }
 
-        .table-wrap {
-            overflow-x: auto;
-            border: 1px solid var(--border);
+        .filter-input:focus {
+            border-color: var(--border-focus);
+            background: var(--bg-input);
+        }
+
+        .table-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
-        table {
+        table.leads-table {
             width: 100%;
             border-collapse: collapse;
+            text-align: left;
         }
 
-        thead th {
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
+        table.leads-table thead {
+            background: #09090d;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        table.leads-table th {
+            padding: 12px 18px;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-secondary);
+            letter-spacing: 0.6px;
+            color: var(--text-tertiary);
             white-space: nowrap;
         }
 
-        tbody td {
-            padding: 12px 16px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
-            vertical-align: middle;
+        table.leads-table tbody tr {
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.15s ease;
         }
 
-        tbody tr:last-child td {
+        table.leads-table tbody tr:last-child {
             border-bottom: none;
         }
 
-        tbody tr:hover {
-            background: var(--bg-input);
+        table.leads-table tbody tr:hover {
+            background: var(--bg-surface-elev);
         }
 
-        .lead-name {
-            font-weight: 500;
+        table.leads-table td {
+            padding: 14px 18px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        /* Célula Principal: Nome + Telefone (Hierarquia Visual) */
+        .lead-primary-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .lead-company-name {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 14px;
+            letter-spacing: -0.2px;
+        }
+
+        .lead-company-phone {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Célula Secundária: Nicho + Região */
+        .lead-context-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .lead-nicho-text {
+            font-size: 12px;
+            font-weight: 600;
             color: var(--text-primary);
         }
 
-        .lead-phone {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: var(--text-secondary);
+        .lead-region-text {
+            font-size: 11px;
+            color: var(--text-tertiary);
         }
 
-        .badge {
+        /* ============================================================
+           BADGE SYSTEM (Consistent Icon + Color)
+           ============================================================ */
+        .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 3px 10px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 500;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1;
+            text-decoration: none;
         }
 
-        .badge-yes {
-            background: rgba(0, 200, 83, 0.12);
-            color: #4caf50;
+        .badge-positive {
+            background: var(--accent-emerald-bg);
+            color: #34d399;
+            border: 1px solid var(--accent-emerald-border);
         }
 
-        .badge-no {
-            background: rgba(255, 68, 68, 0.08);
-            color: #777;
+        .badge-positive:hover {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
         }
 
-        .status-select {
+        .badge-negative {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Status Select Dropdown */
+        .lead-status-dropdown {
             padding: 5px 10px;
-            font-size: 12px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: var(--radius-pill);
+            background: var(--bg-base);
+            border: 1px solid var(--border-medium);
             color: var(--text-primary);
             font-family: inherit;
             cursor: pointer;
             outline: none;
+            transition: all 0.2s;
         }
 
-        .status-select:focus {
-            border-color: #555;
-        }
+        .lead-status-dropdown.status-novo       { color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); background: rgba(56, 189, 248, 0.08); }
+        .lead-status-dropdown.status-contatado  { color: #fbbf24; border-color: rgba(251, 191, 36, 0.35); background: rgba(251, 191, 36, 0.08); }
+        .lead-status-dropdown.status-convertido { color: #34d399; border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.08); }
+        .lead-status-dropdown.status-descartado { color: #9ca3af; border-color: rgba(156, 163, 175, 0.2); background: rgba(156, 163, 175, 0.05); }
 
-        .status-novo     { border-color: #2196f3; color: #64b5f6; }
-        .status-contatado { border-color: #ff9800; color: #ffb74d; }
-        .status-convertido { border-color: #4caf50; color: #81c784; }
-        .status-descartado { border-color: #666; color: #999; }
-
-        .actions-cell {
+        /* Ações na Tabela */
+        .table-action-stack {
             display: flex;
-            gap: 6px;
             align-items: center;
+            gap: 6px;
         }
 
         /* ============================================================
-           Empty state
+           EMPTY STATES (Designed & Human-made)
            ============================================================ */
-        .empty-state {
+        .empty-view {
+            padding: 64px 24px;
             text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
-        .empty-state h3 { font-size: 18px; color: var(--text-secondary); margin-bottom: 8px; }
-        .empty-state p { font-size: 14px; }
+        .empty-illustration {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface-elev);
+            border: 1px solid var(--border-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .empty-view h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .empty-view p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            max-width: 340px;
+            margin-bottom: 20px;
+        }
 
         /* ============================================================
-           Spinner
+           MOBILE CARD LIST (Responsive Alternative to Tables)
            ============================================================ */
+        .mobile-lead-cards {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mobile-lead-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mobile-lead-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .mobile-lead-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .mobile-lead-actions-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        /* ============================================================
+           TOAST NOTIFICATIONS
+           ============================================================ */
+        .toast-viewport {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast-item {
+            pointer-events: auto;
+            background: var(--bg-surface-elev);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 400px;
+        }
+
+        .toast-item.error {
+            border-color: var(--accent-rose-border);
+            background: #180d11;
+            color: #fecdd3;
+        }
+
+        @keyframes toastSlideIn {
+            from { transform: translateY(16px); opacity: 0; }
+            to   { transform: translateY(0); opacity: 1; }
+        }
+
         .spinner {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             border: 2px solid transparent;
             border-top: 2px solid currentColor;
             border-radius: 50%;
@@ -548,261 +925,271 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ============================================================
-           Toast
+           MEDIA QUERIES (Ultra Responsive)
            ============================================================ */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            padding: 12px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            font-size: 14px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            animation: slideIn 0.3s ease;
-            max-width: 380px;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to   { transform: translateX(0); opacity: 1; }
-        }
-
-        /* ============================================================
-           Responsive
-           ============================================================ */
-        @media (max-width: 768px) {
-            .form-row, .form-row-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .leads-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .filters {
-                flex-direction: column;
-            }
-
-            .filters .form-input,
-            .filters .form-select {
-                width: 100%;
-            }
-
-            .actions-cell {
-                flex-direction: column;
-            }
+        @media (max-width: 900px) {
+            .table-container { display: none; }
+            .mobile-lead-cards { display: flex; }
+            .form-grid { grid-template-columns: 1fr; }
+            .app-container { padding: 16px 16px 60px 16px; }
+            header.app-header { flex-direction: row; }
         }
     </style>
 </head>
 <body>
-<div class="app">
+
+<div class="app-container">
+
     <!-- ======================================================
-         Header
+         APP HEADER WITH LOGO & BRANDING
          ====================================================== -->
-    <header>
-        <div class="logo">
-            <div class="logo-icon">⚡</div>
-            <h1>Lead Prospector</h1>
-        </div>
+    <header class="app-header">
+        <a href="#" class="brand">
+            <div class="brand-logo-frame">
+                <img src="logo.png" alt="Allcance Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%238b5cf6\'%3E%3Cpath d=\'M12 2L2 12h5v8h10v-8h5L12 2z\'/%3E%3C/svg%3E'" />
+            </div>
+            <div class="brand-titles">
+                <span class="brand-name">
+                    Allcance
+                    <span class="badge-pro">Lead Intelligence</span>
+                </span>
+                <span class="brand-subtitle">Prospecção Automatizada & Propostas Comerciais</span>
+            </div>
+        </a>
+
         <div class="header-actions">
-            <button class="btn-icon" onclick="toggleConfig()" title="Configurações">⚙</button>
+            <button class="btn btn-ghost btn-sm" onclick="openConfigModal()" title="Configurar Integrações">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Configurações
+            </button>
         </div>
     </header>
 
     <!-- ======================================================
-         Config Panel (collapsible)
+         NAVIGATION TABS (Linear Design)
          ====================================================== -->
-    <div class="config-panel">
-        <div class="config-body" id="configBody">
-            <div class="card">
-                <div class="card-title">⚙ Configurações</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Supabase URL</label>
-                        <input class="form-input" id="cfgSupabaseUrl" placeholder="https://xxx.supabase.co" />
+    <nav class="tabs-nav">
+        <button class="tab-btn active" id="btn-tab-search" onclick="switchTab('search', this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Nova Prospecção
+        </button>
+        <button class="tab-btn" id="btn-tab-leads" onclick="switchTab('leads', this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Leads Capturados
+            <span class="tab-count" id="leadsTabBadge">0</span>
+        </button>
+    </nav>
+
+    <!-- ======================================================
+         TAB 1: BUSCAR LEADS (SEARCH PANEL)
+         ====================================================== -->
+    <div class="tab-pane active" id="pane-search">
+        <div class="card" style="max-width: 680px;">
+            <div class="card-header">
+                <div class="card-header-left">
+                    <div class="card-icon-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Supabase Anon Key</label>
-                        <input class="form-input" id="cfgSupabaseKey" placeholder="eyJ..." />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">GitHub Repo (owner/repo)</label>
-                        <input class="form-input" id="cfgGithubRepo" placeholder="meu-user/lead-prospector" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">GitHub Token (PAT)</label>
-                        <input class="form-input" id="cfgGithubToken" type="password" placeholder="ghp_..." />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label class="form-label">Google Gemini API Key (Opcional - Free Tier para Propostas)</label>
-                        <input class="form-input" id="cfgGeminiKey" type="password" placeholder="AIzaSy..." />
+                    <div>
+                        <h2 class="card-title">Parâmetros de Busca</h2>
+                        <span class="card-desc">Execute a extração de empresas no Google Maps via GitHub Actions</span>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="saveConfig()">Salvar configurações</button>
             </div>
-        </div>
-    </div>
 
-    <!-- ======================================================
-         Tabs
-         ====================================================== -->
-    <div class="tabs">
-        <button class="tab active" onclick="switchTab('search', this)">🔍 Buscar Leads</button>
-        <button class="tab" onclick="switchTab('leads', this)">📋 Meus Leads</button>
-    </div>
-
-    <!-- ======================================================
-         Tab: Buscar Leads
-         ====================================================== -->
-    <div class="tab-content active" id="tab-search">
-        <div class="search-panel">
-            <div class="card">
-                <div class="card-title">🔍 Nova busca de leads</div>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label" for="searchNicho">
+                        Nicho de Mercado / Atuação
+                    </label>
+                    <input class="form-input" id="searchNicho" placeholder="Ex: Clínica de Estética, Advogado Trabalhista, Restaurante..." />
+                </div>
 
                 <div class="form-group">
-                    <label class="form-label">Nicho</label>
-                    <input class="form-input" id="searchNicho" placeholder="Ex: cabeleireiro, advogado, delivery, pet shop..." />
+                    <label class="form-label" for="searchRegiao">
+                        Região Alvo
+                    </label>
+                    <select class="form-select" id="searchRegiao">
+                        <option value="">Selecione a região...</option>
+                        <optgroup label="Nacional">
+                            <option value="Brasil todo">🇧🇷 Brasil todo</option>
+                        </optgroup>
+                        <optgroup label="Principais Capitais">
+                            <option value="São Paulo, SP, Brasil">São Paulo, SP</option>
+                            <option value="Rio de Janeiro, RJ, Brasil">Rio de Janeiro, RJ</option>
+                            <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
+                            <option value="Brasília, DF">Brasília, DF</option>
+                            <option value="Curitiba, PR">Curitiba, PR</option>
+                            <option value="Porto Alegre, RS">Porto Alegre, RS</option>
+                            <option value="Salvador, BA">Salvador, BA</option>
+                            <option value="Fortaleza, CE">Fortaleza, CE</option>
+                            <option value="Goiânia, GO">Goiânia, GO</option>
+                            <option value="Campinas, SP">Campinas, SP</option>
+                            <option value="Florianópolis, SC">Florianópolis, SC</option>
+                        </optgroup>
+                        <optgroup label="Estados">
+                            <option value="São Paulo (estado)">São Paulo (Estado)</option>
+                            <option value="Rio de Janeiro (estado)">Rio de Janeiro (Estado)</option>
+                            <option value="Minas Gerais">Minas Gerais</option>
+                            <option value="Paraná">Paraná</option>
+                            <option value="Santa Catarina">Santa Catarina</option>
+                            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+                            <option value="Bahia">Bahia</option>
+                            <option value="Ceará">Ceará</option>
+                        </optgroup>
+                        <optgroup label="Personalizado">
+                            <option value="__custom">✏️ Inserir cidade/bairro manualmente...</option>
+                        </optgroup>
+                    </select>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Região</label>
-                        <select class="form-select" id="searchRegiao">
-                            <option value="">Selecione a região...</option>
-                            <optgroup label="País">
-                                <option value="Brasil todo">🇧🇷 Brasil todo</option>
-                            </optgroup>
-                            <optgroup label="Estados">
-                                <option value="São Paulo, SP">São Paulo (estado)</option>
-                                <option value="Rio de Janeiro, RJ">Rio de Janeiro (estado)</option>
-                                <option value="Minas Gerais, MG">Minas Gerais</option>
-                                <option value="Bahia, BA">Bahia</option>
-                                <option value="Paraná, PR">Paraná</option>
-                                <option value="Rio Grande do Sul, RS">Rio Grande do Sul</option>
-                                <option value="Pernambuco, PE">Pernambuco</option>
-                                <option value="Ceará, CE">Ceará</option>
-                                <option value="Santa Catarina, SC">Santa Catarina</option>
-                                <option value="Goiás, GO">Goiás</option>
-                                <option value="Distrito Federal, DF">Distrito Federal</option>
-                            </optgroup>
-                            <optgroup label="Cidades">
-                                <option value="São Paulo, SP, Brasil">São Paulo (cidade)</option>
-                                <option value="Rio de Janeiro, RJ, Brasil">Rio de Janeiro (cidade)</option>
-                                <option value="Belo Horizonte, MG">Belo Horizonte</option>
-                                <option value="Brasília, DF">Brasília</option>
-                                <option value="Salvador, BA">Salvador</option>
-                                <option value="Curitiba, PR">Curitiba</option>
-                                <option value="Fortaleza, CE">Fortaleza</option>
-                                <option value="Recife, PE">Recife</option>
-                                <option value="Porto Alegre, RS">Porto Alegre</option>
-                                <option value="Manaus, AM">Manaus</option>
-                                <option value="Goiânia, GO">Goiânia</option>
-                                <option value="Campinas, SP">Campinas</option>
-                                <option value="Florianópolis, SC">Florianópolis</option>
-                            </optgroup>
-                            <optgroup label="Personalizado">
-                                <option value="__custom">✏️ Digitar região manualmente...</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Quantidade de leads</label>
-                        <input class="form-input" id="searchQtd" type="number" min="1" max="30" value="10" />
-                    </div>
+                <div class="form-group">
+                    <label class="form-label" for="searchQtd">
+                        Quantidade de Leads
+                    </label>
+                    <input class="form-input" id="searchQtd" type="number" min="1" max="30" value="10" />
                 </div>
 
-                <!-- Custom region input (hidden by default) -->
-                <div class="form-group" id="customRegiaoGroup" style="display:none;">
-                    <label class="form-label">Região personalizada</label>
-                    <input class="form-input" id="customRegiao" placeholder="Ex: Uberlândia, MG" />
+                <div class="form-group full-width" id="customRegiaoGroup" style="display: none;">
+                    <label class="form-label" for="customRegiao">
+                        Cidade, Estado ou Bairro Específico
+                    </label>
+                    <input class="form-input" id="customRegiao" placeholder="Ex: Moema, São Paulo ou Ribeirão Preto, SP" />
                 </div>
+            </div>
 
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px;">
                 <button class="btn btn-primary" id="btnSearch" onclick="dispatchSearch()">
-                    🚀 Disparar busca
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Iniciar Varredura
                 </button>
+            </div>
 
-                <div class="search-status" id="searchStatus">
-                    <div class="status-text" id="statusText"></div>
+            <div class="search-feedback" id="searchFeedback">
+                <div id="feedbackIcon">⚡</div>
+                <div class="feedback-content">
+                    <h4 id="feedbackTitle">Status da Execução</h4>
+                    <p id="feedbackText">Aguardando início...</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ======================================================
-         Tab: Meus Leads
+         TAB 2: MEUS LEADS (TABLE & CARDS VIEW)
          ====================================================== -->
-    <div class="tab-content" id="tab-leads">
-        <div class="leads-header">
-            <div class="leads-count">
-                <strong id="leadsTotal">0</strong> leads encontrados
+    <div class="tab-pane" id="pane-leads">
+        
+        <div class="leads-toolbar">
+            <div class="filter-group">
+                <input class="filter-input" id="filterSearch" placeholder="Buscar por nome, telefone..." oninput="applyFilters()" />
+                <input class="filter-input" id="filterNicho" placeholder="Filtrar nicho..." oninput="applyFilters()" />
+                <select class="form-select" id="filterStatus" style="width: auto; padding: 7px 32px 7px 12px; font-size: 12px;" onchange="applyFilters()">
+                    <option value="">Todos os status</option>
+                    <option value="novo">🔵 Novo</option>
+                    <option value="contatado">🟠 Contatado</option>
+                    <option value="convertido">🟢 Convertido</option>
+                    <option value="descartado">⚫ Descartado</option>
+                </select>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="loadLeads()">
-                🔄 Atualizar
-            </button>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button class="btn btn-secondary btn-sm" onclick="loadLeads()">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                    Atualizar Dados
+                </button>
+            </div>
         </div>
 
-        <div class="filters">
-            <input class="form-input" id="filterNicho" placeholder="Filtrar por nicho..." oninput="applyFilters()" />
-            <input class="form-input" id="filterRegiao" placeholder="Filtrar por região..." oninput="applyFilters()" />
-            <select class="form-select" id="filterStatus" onchange="applyFilters()">
-                <option value="">Todos os status</option>
-                <option value="novo">🔵 Novo</option>
-                <option value="contatado">🟠 Contatado</option>
-                <option value="convertido">🟢 Convertido</option>
-                <option value="descartado">⚫ Descartado</option>
-            </select>
-        </div>
-
-        <div class="table-wrap">
-            <table>
+        <!-- Desktop Table View -->
+        <div class="table-container">
+            <table class="leads-table">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th>Telefone</th>
-                        <th>Nicho</th>
-                        <th>Região</th>
-                        <th>Site</th>
+                        <th>Lead / Empresa</th>
+                        <th>Nicho & Região</th>
+                        <th>Presença Web</th>
                         <th>Instagram</th>
                         <th>Status</th>
                         <th>Proposta Comercial</th>
-                        <th>Ações</th>
+                        <th style="text-align: right;">Ação</th>
                     </tr>
                 </thead>
                 <tbody id="leadsTableBody">
+                    <!-- Dynamic rendering -->
                 </tbody>
             </table>
         </div>
 
-        <div class="empty-state" id="emptyState" style="display:none;">
-            <div class="icon">📭</div>
+        <!-- Mobile Cards View (Responsive) -->
+        <div class="mobile-lead-cards" id="mobileCardsContainer">
+            <!-- Dynamic rendering -->
+        </div>
+
+        <!-- Empty State View -->
+        <div class="empty-view" id="emptyState" style="display: none;">
+            <div class="empty-illustration">📭</div>
             <h3>Nenhum lead encontrado</h3>
-            <p>Use a aba "Buscar Leads" para iniciar uma prospecção.</p>
+            <p>Dispare uma nova varredura ou redefina os filtros para encontrar seus contatos.</p>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('search', document.getElementById('btn-tab-search'))">
+                Fazer Nova Busca
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ======================================================
+     CONFIG MODAL (Drawer / Modal Style)
+     ====================================================== -->
+<div class="config-overlay" id="configOverlay" onclick="if(event.target===this) closeConfigModal()">
+    <div class="config-modal">
+        <div class="config-modal-header">
+            <h3 class="config-modal-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Integrações & Conexões
+            </h3>
+            <button class="btn btn-ghost btn-xs" onclick="closeConfigModal()">✕</button>
+        </div>
+
+        <div class="form-grid" style="margin-bottom: 24px;">
+            <div class="form-group">
+                <label class="form-label" for="cfgSupabaseUrl">Supabase URL</label>
+                <input class="form-input" id="cfgSupabaseUrl" placeholder="https://xxx.supabase.co" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cfgSupabaseKey">Supabase Anon Key</label>
+                <input class="form-input" id="cfgSupabaseKey" placeholder="eyJ..." />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cfgGithubRepo">GitHub Repositório</label>
+                <input class="form-input" id="cfgGithubRepo" placeholder="vitorsoares5124-ux/allcance" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cfgGithubToken">GitHub Token (PAT)</label>
+                <input class="form-input" id="cfgGithubToken" type="password" placeholder="ghp_..." />
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label" for="cfgGeminiKey">Google Gemini API Key (Opcional)</label>
+                <input class="form-input" id="cfgGeminiKey" type="password" placeholder="AIzaSy..." />
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="btn btn-secondary" onclick="closeConfigModal()">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveConfig()">Salvar Alterações</button>
         </div>
     </div>
 </div>
 
-<!-- Toast container -->
-<div class="toast-container" id="toastContainer"></div>
+<!-- Toast Container -->
+<div class="toast-viewport" id="toastViewport"></div>
 
 <script>
 // ============================================================
-// State & Config
+// STATE & STORAGE
 // ============================================================
-
 let supabaseClient = null;
 let allLeads = [];
 let generatingLeads = new Set();
@@ -824,10 +1211,11 @@ function saveConfig() {
     localStorage.setItem('lp_github_token',  document.getElementById('cfgGithubToken').value.trim());
     localStorage.setItem('lp_gemini_key',    document.getElementById('cfgGeminiKey').value.trim());
     initSupabase(true);
-    showToast('✅ Configurações salvas!');
+    closeConfigModal();
+    showToast('Configurações salvas com sucesso!');
 }
 
-function loadConfig() {
+function loadConfigInputs() {
     const cfg = getConfig();
     document.getElementById('cfgSupabaseUrl').value = cfg.supabaseUrl;
     document.getElementById('cfgSupabaseKey').value = cfg.supabaseKey;
@@ -836,9 +1224,13 @@ function loadConfig() {
     document.getElementById('cfgGeminiKey').value = cfg.geminiKey;
 }
 
-function toggleConfig() {
-    const body = document.getElementById('configBody');
-    body.classList.toggle('open');
+function openConfigModal() {
+    loadConfigInputs();
+    document.getElementById('configOverlay').classList.add('open');
+}
+
+function closeConfigModal() {
+    document.getElementById('configOverlay').classList.remove('open');
 }
 
 function initSupabase(force = false) {
@@ -854,26 +1246,20 @@ function initSupabase(force = false) {
 }
 
 // ============================================================
-// Tabs
+// TAB NAVIGATION
 // ============================================================
+function switchTab(tabName, btnEl) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
 
-function switchTab(tabName, el) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-    const activeBtn = el || (tabName === 'search' ? document.querySelectorAll('.tab')[0] : document.querySelectorAll('.tab')[1]);
-    if (activeBtn) activeBtn.classList.add('active');
-    
-    const content = document.getElementById('tab-' + tabName);
-    if (content) content.classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+    const targetPane = document.getElementById('pane-' + tabName);
+    if (targetPane) targetPane.classList.add('active');
 
     if (tabName === 'leads') loadLeads();
 }
 
-// ============================================================
-// Region selector
-// ============================================================
-
+// Seletor de região personalizada
 document.getElementById('searchRegiao').addEventListener('change', function() {
     const customGroup = document.getElementById('customRegiaoGroup');
     if (this.value === '__custom') {
@@ -885,15 +1271,14 @@ document.getElementById('searchRegiao').addEventListener('change', function() {
 });
 
 // ============================================================
-// Dispatch Search (trigger GitHub Actions)
+// DISPATCH SCRAPER (GITHUB ACTIONS)
 // ============================================================
-
 async function dispatchSearch() {
     const cfg = getConfig();
 
     if (!cfg.githubRepo || !cfg.githubToken) {
-        showToast('⚠️ Configure o GitHub Repo e Token nas configurações.', 'error');
-        toggleConfig();
+        showToast('Configure o GitHub Repo e Token nas configurações.', 'error');
+        openConfigModal();
         return;
     }
 
@@ -905,19 +1290,21 @@ async function dispatchSearch() {
     const quantidade = parseInt(document.getElementById('searchQtd').value) || 10;
 
     if (!nicho) {
-        showToast('⚠️ Informe o nicho.', 'error');
+        showToast('Informe o nicho de atuação.', 'error');
+        document.getElementById('searchNicho').focus();
         return;
     }
     if (!regiao) {
-        showToast('⚠️ Selecione uma região.', 'error');
+        showToast('Selecione ou digite uma região.', 'error');
+        document.getElementById('searchRegiao').focus();
         return;
     }
 
     const btn = document.getElementById('btnSearch');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Disparando...';
+    btn.innerHTML = '<span class="spinner"></span> Disparando Varredura...';
 
-    showStatus('⏳ Disparando workflow no GitHub Actions...', 'info');
+    showFeedback('Executando...', 'Disparando workflow no GitHub Actions...', 'info');
 
     try {
         const response = await fetch(
@@ -941,41 +1328,43 @@ async function dispatchSearch() {
         );
 
         if (response.status === 204 || response.ok) {
-            showStatus(
-                `✅ Busca disparada! O scraper está rodando no GitHub Actions.<br>` +
-                `<small style="color:var(--text-muted)">Nicho: ${nicho} | Região: ${regiao} | Qtd: ${quantidade}<br>` +
-                `Os leads aparecerão na aba "Meus Leads" quando o workflow finalizar.</small>`,
+            showFeedback(
+                'Varredura em Execução',
+                `O robô está extraindo ${quantidade} leads de "${nicho}" em "${regiao}". Os contatos aparecerão na aba "Leads Capturados" assim que concluído.`,
                 'success'
             );
-            showToast('✅ Workflow disparado com sucesso!');
+            showToast('Workflow iniciado no GitHub Actions!');
         } else {
-            const error = await response.json();
-            showStatus(`❌ Erro ao disparar: ${error.message || response.statusText}`, 'error');
-            showToast('❌ Erro ao disparar workflow.', 'error');
+            const err = await response.json();
+            throw new Error(err.message || response.statusText);
         }
     } catch (err) {
-        showStatus(`❌ Erro de conexão: ${err.message}`, 'error');
-        showToast('❌ Falha na conexão.', 'error');
+        showFeedback('Falha no Disparo', err.message, 'error');
+        showToast(`Erro: ${err.message}`, 'error');
     }
 
     btn.disabled = false;
-    btn.innerHTML = '🚀 Disparar busca';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Iniciar Varredura';
 }
 
-function showStatus(html, type) {
-    const el = document.getElementById('searchStatus');
-    const text = document.getElementById('statusText');
-    el.className = 'search-status visible ' + type;
-    text.innerHTML = html;
+function showFeedback(title, message, type) {
+    const box = document.getElementById('searchFeedback');
+    const titleEl = document.getElementById('feedbackTitle');
+    const textEl = document.getElementById('feedbackText');
+    const iconEl = document.getElementById('feedbackIcon');
+
+    box.className = 'search-feedback visible ' + type;
+    titleEl.textContent = title;
+    textEl.innerHTML = message;
+    iconEl.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : '⏳';
 }
 
 // ============================================================
-// Load Leads from Supabase
+// LOAD LEADS FROM SUPABASE
 // ============================================================
-
 async function loadLeads() {
     if (!initSupabase()) {
-        showToast('⚠️ Configure o Supabase nas configurações.', 'error');
+        showToast('Configure o Supabase nas configurações.', 'error');
         return;
     }
 
@@ -988,22 +1377,22 @@ async function loadLeads() {
         if (error) throw error;
 
         allLeads = data || [];
+        document.getElementById('leadsTabBadge').textContent = allLeads.length;
         applyFilters();
     } catch (err) {
-        showToast(`❌ Erro ao carregar leads: ${err.message}`, 'error');
+        showToast(`Erro ao carregar leads: ${err.message}`, 'error');
     }
 }
 
 // ============================================================
-// Gerar Proposta Comercial Sob Demanda
+// PROPOSAL GENERATOR PIPELINE (ON DEMAND)
 // ============================================================
-
 async function generateProposal(leadId) {
     const cfg = getConfig();
 
     if (!cfg.githubRepo || !cfg.githubToken) {
-        showToast('⚠️ Configure o GitHub Repo e Token nas configurações para gerar propostas.', 'error');
-        toggleConfig();
+        showToast('Configure o GitHub Repo e Token nas configurações.', 'error');
+        openConfigModal();
         return;
     }
 
@@ -1012,7 +1401,7 @@ async function generateProposal(leadId) {
 
     generatingLeads.add(leadId);
     applyFilters();
-    showToast(`⏳ Iniciando pipeline de proposta para "${leadName}"...`);
+    showToast(`Gerando proposta para "${leadName}"...`);
 
     try {
         const response = await fetch(
@@ -1026,9 +1415,7 @@ async function generateProposal(leadId) {
                 },
                 body: JSON.stringify({
                     ref: 'main',
-                    inputs: {
-                        lead_id: leadId
-                    }
+                    inputs: { lead_id: leadId }
                 })
             }
         );
@@ -1038,26 +1425,26 @@ async function generateProposal(leadId) {
             throw new Error(err.message || response.statusText);
         }
 
-        showToast(`🚀 Diagnóstico e mockup em execução! Aguarde 20-40s...`);
+        showToast('Pipeline de análise e PDF em execução (~25s)...');
         pollProposalReady(leadId);
 
     } catch (err) {
         generatingLeads.delete(leadId);
         applyFilters();
-        showToast(`❌ Erro ao disparar gerador: ${err.message}`, 'error');
+        showToast(`Erro ao disparar gerador: ${err.message}`, 'error');
     }
 }
 
 function pollProposalReady(leadId) {
     let attempts = 0;
-    const maxAttempts = 35; // ~140 segundos
+    const maxAttempts = 35;
     const interval = setInterval(async () => {
         attempts++;
         if (attempts > maxAttempts) {
             clearInterval(interval);
             generatingLeads.delete(leadId);
             applyFilters();
-            showToast('⚠️ Tempo limite excedido. Verifique o status na aba Actions do GitHub.', 'error');
+            showToast('Tempo limite excedido ao gerar proposta.', 'error');
             return;
         }
 
@@ -1079,28 +1466,31 @@ function pollProposalReady(leadId) {
                     lead.proposta_status = data.proposta_status;
                 }
                 applyFilters();
-                showToast(`🎉 Proposta comercial pronta! Clique em "Baixar PDF" para visualizar.`);
+                showToast('Proposta comercial pronta para download!');
             }
         } catch (e) {}
     }, 4000);
 }
 
 // ============================================================
-// Filter & Render Leads
+// FILTER & RENDER (TABLE & MOBILE CARDS)
 // ============================================================
-
 function applyFilters() {
-    const nichoFilter  = document.getElementById('filterNicho').value.toLowerCase();
-    const regiaoFilter = document.getElementById('filterRegiao').value.toLowerCase();
-    const statusFilter = document.getElementById('filterStatus').value;
+    const query = (document.getElementById('filterSearch')?.value || '').toLowerCase();
+    const nichoFilter = (document.getElementById('filterNicho')?.value || '').toLowerCase();
+    const statusFilter = document.getElementById('filterStatus')?.value || '';
 
     let filtered = allLeads;
 
+    if (query) {
+        filtered = filtered.filter(l => 
+            (l.nome && l.nome.toLowerCase().includes(query)) ||
+            (l.telefone && l.telefone.includes(query)) ||
+            (l.regiao && l.regiao.toLowerCase().includes(query))
+        );
+    }
     if (nichoFilter) {
         filtered = filtered.filter(l => l.nicho && l.nicho.toLowerCase().includes(nichoFilter));
-    }
-    if (regiaoFilter) {
-        filtered = filtered.filter(l => l.regiao && l.regiao.toLowerCase().includes(regiaoFilter));
     }
     if (statusFilter) {
         filtered = filtered.filter(l => l.status === statusFilter);
@@ -1111,96 +1501,163 @@ function applyFilters() {
 
 function renderLeads(leads) {
     const tbody = document.getElementById('leadsTableBody');
-    const empty = document.getElementById('emptyState');
-    const total = document.getElementById('leadsTotal');
-
-    total.textContent = leads.length;
+    const mobileContainer = document.getElementById('mobileCardsContainer');
+    const emptyState = document.getElementById('emptyState');
 
     if (leads.length === 0) {
         tbody.innerHTML = '';
-        empty.style.display = 'block';
+        mobileContainer.innerHTML = '';
+        emptyState.style.display = 'flex';
         return;
     }
 
-    empty.style.display = 'none';
+    emptyState.style.display = 'none';
 
+    // Desktop Table Rows
     tbody.innerHTML = leads.map(lead => {
         const phone = lead.telefone || '';
         const waPhone = phone.replace(/[^\d]/g, '');
-        const statusClass = 'status-' + (lead.status || 'novo');
         const isGenerating = generatingLeads.has(lead.id);
 
-        let proposalCell = '';
+        let proposalAction = '';
         if (isGenerating) {
-            proposalCell = `
-                <button class="btn btn-secondary btn-sm" disabled style="opacity:0.8;">
+            proposalAction = `
+                <button class="btn btn-secondary btn-xs" disabled style="opacity:0.8;">
                     <span class="spinner"></span> Gerando...
                 </button>
             `;
         } else if (lead.proposta_pdf_url) {
-            proposalCell = `
-                <div style="display:flex; gap:4px; align-items:center;">
-                    <a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-proposal-ready btn-sm">
-                        📄 Baixar PDF
+            proposalAction = `
+                <div class="table-action-stack">
+                    <a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-xs">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        PDF
                     </a>
-                    <button class="btn btn-icon btn-sm" title="Regerar Proposta" onclick="generateProposal('${lead.id}')">🔄</button>
+                    <button class="btn btn-ghost btn-xs" title="Regerar Proposta" onclick="generateProposal('${lead.id}')">🔄</button>
                 </div>
             `;
         } else {
-            proposalCell = `
-                <button class="btn btn-proposal btn-sm" onclick="generateProposal('${lead.id}')">
-                    ⚡ Gerar proposta
+            proposalAction = `
+                <button class="btn btn-generate btn-xs" onclick="generateProposal('${lead.id}')">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Gerar
                 </button>
             `;
         }
 
         return `
             <tr>
-                <td class="lead-name">${esc(lead.nome)}</td>
-                <td class="lead-phone">${esc(phone)}</td>
-                <td>${esc(lead.nicho)}</td>
-                <td>${esc(lead.regiao)}</td>
                 <td>
-                    ${lead.tem_site
-                        ? `<a href="${esc(lead.site_url)}" target="_blank" class="badge badge-yes">✓ Sim</a>`
-                        : '<span class="badge badge-no">✗ Não</span>'
+                    <div class="lead-primary-cell">
+                        <span class="lead-company-name">${esc(lead.nome)}</span>
+                        <span class="lead-company-phone">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            ${esc(phone)}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="lead-context-cell">
+                        <span class="lead-nicho-text">${esc(lead.nicho)}</span>
+                        <span class="lead-region-text">${esc(lead.regiao)}</span>
+                    </div>
+                </td>
+                <td>
+                    ${lead.tem_site && lead.site_url
+                        ? `<a href="${esc(lead.site_url)}" target="_blank" class="status-badge badge-positive">
+                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                             Site Ativo
+                           </a>`
+                        : `<span class="status-badge badge-negative">Sem Site</span>`
                     }
                 </td>
                 <td>
-                    ${lead.tem_instagram
-                        ? `<a href="https://instagram.com/${esc((lead.instagram_handle||'').replace('@',''))}" target="_blank" class="badge badge-yes">${esc(lead.instagram_handle)}</a>`
-                        : '<span class="badge badge-no">✗ Não</span>'
+                    ${lead.tem_instagram && lead.instagram_handle
+                        ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" class="status-badge badge-positive">
+                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                             ${esc(lead.instagram_handle)}
+                           </a>`
+                        : `<span class="status-badge badge-negative">Inativo</span>`
                     }
                 </td>
                 <td>
-                    <select class="status-select ${statusClass}" onchange="updateStatus('${lead.id}', this.value)">
-                        <option value="novo"       ${lead.status==='novo'       ? 'selected':''}>🔵 Novo</option>
-                        <option value="contatado"  ${lead.status==='contatado'  ? 'selected':''}>🟠 Contatado</option>
-                        <option value="convertido" ${lead.status==='convertido' ? 'selected':''}>🟢 Convertido</option>
-                        <option value="descartado" ${lead.status==='descartado' ? 'selected':''}>⚫ Descartado</option>
+                    <select class="lead-status-dropdown status-${lead.status || 'novo'}" onchange="updateLeadStatus('${lead.id}', this.value, this)">
+                        <option value="novo"       ${lead.status==='novo'       ? 'selected':''}>Novo</option>
+                        <option value="contatado"  ${lead.status==='contatado'  ? 'selected':''}>Contatado</option>
+                        <option value="convertido" ${lead.status==='convertido' ? 'selected':''}>Convertido</option>
+                        <option value="descartado" ${lead.status==='descartado' ? 'selected':''}>Descartado</option>
                     </select>
                 </td>
                 <td>
-                    ${proposalCell}
+                    ${proposalAction}
                 </td>
-                <td>
-                    <div class="actions-cell">
-                        <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-sm">
-                            💬 WhatsApp
-                        </a>
-                    </div>
+                <td style="text-align: right;">
+                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-xs">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.072-2.029-.481-1.604-.664-2.639-2.28-2.719-2.387-.079-.108-.648-.862-.648-1.645 0-.783.41-1.168.556-1.328.146-.16.32-.2.427-.2.107 0 .213.001.306.006.098.005.23-.037.36.275.144.346.49 1.198.533 1.286.043.088.072.19.014.306-.058.115-.088.188-.174.288-.087.1-.183.223-.262.299-.088.084-.18.176-.078.351.102.175.454.748.974 1.212.671.597 1.236.782 1.411.869.175.087.278.073.38-.044.103-.116.438-.511.556-.686.117-.175.234-.146.395-.087.16.058 1.019.48 1.194.568.175.088.292.131.335.204.044.073.044.423-.1.828z"/></svg>
+                        WhatsApp
+                    </a>
                 </td>
             </tr>
+        `;
+    }).join('');
+
+    // Mobile Responsive Cards
+    mobileContainer.innerHTML = leads.map(lead => {
+        const phone = lead.telefone || '';
+        const waPhone = phone.replace(/[^\d]/g, '');
+        const isGenerating = generatingLeads.has(lead.id);
+
+        let proposalBtn = '';
+        if (isGenerating) {
+            proposalBtn = `<button class="btn btn-secondary btn-sm" disabled><span class="spinner"></span> Gerando...</button>`;
+        } else if (lead.proposta_pdf_url) {
+            proposalBtn = `<a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-sm">📄 Baixar PDF</a>`;
+        } else {
+            proposalBtn = `<button class="btn btn-generate btn-sm" onclick="generateProposal('${lead.id}')">⚡ Gerar Proposta</button>`;
+        }
+
+        return `
+            <div class="mobile-lead-card">
+                <div class="mobile-lead-card-header">
+                    <div>
+                        <div class="lead-company-name">${esc(lead.nome)}</div>
+                        <div class="lead-company-phone">${esc(phone)}</div>
+                    </div>
+                    <select class="lead-status-dropdown status-${lead.status || 'novo'}" onchange="updateLeadStatus('${lead.id}', this.value, this)">
+                        <option value="novo"       ${lead.status==='novo'       ? 'selected':''}>Novo</option>
+                        <option value="contatado"  ${lead.status==='contatado'  ? 'selected':''}>Contatado</option>
+                        <option value="convertido" ${lead.status==='convertido' ? 'selected':''}>Convertido</option>
+                        <option value="descartado" ${lead.status==='descartado' ? 'selected':''}>Descartado</option>
+                    </select>
+                </div>
+
+                <div class="mobile-lead-meta-row">
+                    <span class="status-badge" style="background:rgba(255,255,255,0.05); color:#a1a1aa;">${esc(lead.nicho)}</span>
+                    <span class="status-badge" style="background:rgba(255,255,255,0.05); color:#a1a1aa;">${esc(lead.regiao)}</span>
+                    ${lead.tem_site ? `<span class="status-badge badge-positive">✓ Site</span>` : ''}
+                    ${lead.tem_instagram ? `<span class="status-badge badge-positive">✓ Instagram</span>` : ''}
+                </div>
+
+                <div class="mobile-lead-actions-row">
+                    ${proposalBtn}
+                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-sm" style="flex:1;">
+                        💬 Chamar no WhatsApp
+                    </a>
+                </div>
+            </div>
         `;
     }).join('');
 }
 
 // ============================================================
-// Update Lead Status
+// UPDATE LEAD STATUS
 // ============================================================
-
-async function updateStatus(leadId, newStatus) {
+async function updateLeadStatus(leadId, newStatus, selectEl) {
     if (!supabaseClient) return;
+
+    if (selectEl) {
+        selectEl.className = 'lead-status-dropdown status-' + newStatus;
+    }
 
     try {
         const { error } = await supabaseClient
@@ -1210,20 +1667,18 @@ async function updateStatus(leadId, newStatus) {
 
         if (error) throw error;
 
-        // Update local state
         const lead = allLeads.find(l => l.id === leadId);
         if (lead) lead.status = newStatus;
 
-        showToast(`✅ Status atualizado para "${newStatus}"`);
+        showToast(`Status atualizado para "${newStatus}"`);
     } catch (err) {
-        showToast(`❌ Erro ao atualizar: ${err.message}`, 'error');
+        showToast(`Erro ao atualizar: ${err.message}`, 'error');
     }
 }
 
 // ============================================================
-// Helpers
+// HELPERS & TOAST
 // ============================================================
-
 function esc(str) {
     if (!str) return '';
     const div = document.createElement('div');
@@ -1232,21 +1687,25 @@ function esc(str) {
 }
 
 function showToast(message, type = 'success') {
-    const container = document.getElementById('toastContainer');
+    const container = document.getElementById('toastViewport');
     const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = message;
-    if (type === 'error') toast.style.borderColor = '#ff4444';
+    toast.className = 'toast-item' + (type === 'error' ? ' error' : '');
+    toast.innerHTML = (type === 'error' ? '✕ ' : '✓ ') + message;
     container.appendChild(toast);
-    setTimeout(() => toast.remove(), 4000);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.2s ease-out';
+        setTimeout(() => toast.remove(), 200);
+    }, 3500);
 }
 
 // ============================================================
-// Init
+// INITIALIZATION
 // ============================================================
-
-loadConfig();
+loadConfigInputs();
 initSupabase();
+loadLeads();
 </script>
 </body>
 </html>
