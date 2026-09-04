@@ -1277,6 +1277,7 @@ function openWhatsApp(leadId, phone) {
         return;
     }
 
+    // 1. Marca instantaneamente local e na memória
     contactedLeads.add(leadId);
     try {
         localStorage.setItem('lp_contacted_leads', JSON.stringify(Array.from(contactedLeads)));
@@ -1284,11 +1285,23 @@ function openWhatsApp(leadId, phone) {
 
     const lead = allLeads.find(l => l.id === leadId);
     if (lead && (!lead.status || lead.status === 'novo')) {
-        updateLeadStatus(leadId, 'contatado');
-    } else {
-        applyFilters();
+        lead.status = 'contatado';
     }
 
+    // 2. Re-renderiza o DOM instantaneamente em tempo real (0ms)
+    applyFilters();
+
+    // 3. Sincroniza com Supabase em background
+    if (supabaseClient && lead) {
+        supabaseClient
+            .from('leads')
+            .update({ status: 'contatado' })
+            .eq('id', leadId)
+            .then(() => {})
+            .catch(err => console.error('Erro ao sincronizar status:', err));
+    }
+
+    // 4. Abre o WhatsApp
     window.open(`https://wa.me/${waPhone}`, '_blank');
 }
 
@@ -1423,6 +1436,22 @@ function renderLeads(leads) {
 }
 
 async function updateLeadStatus(leadId, newStatus) {
+    const lead = allLeads.find(l => l.id === leadId);
+    if (lead) {
+        lead.status = newStatus;
+        if (newStatus === 'contatado' || newStatus === 'convertido') {
+            contactedLeads.add(leadId);
+        } else if (newStatus === 'novo') {
+            contactedLeads.delete(leadId);
+        }
+        try {
+            localStorage.setItem('lp_contacted_leads', JSON.stringify(Array.from(contactedLeads)));
+        } catch(e) {}
+    }
+
+    // Atualiza a interface instantaneamente
+    applyFilters();
+
     if (!supabaseClient) return;
 
     try {
@@ -1432,13 +1461,9 @@ async function updateLeadStatus(leadId, newStatus) {
             .eq('id', leadId);
 
         if (error) throw error;
-
-        const lead = allLeads.find(l => l.id === leadId);
-        if (lead) lead.status = newStatus;
-
         showToast(`Status atualizado para "${newStatus}"`);
     } catch (err) {
-        showToast(`Erro: ${err.message}`, 'error');
+        showToast(`Erro ao salvar: ${err.message}`, 'error');
     }
 }
 
