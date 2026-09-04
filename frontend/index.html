@@ -398,16 +398,53 @@
 
         .form-select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%3A888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 36px;
+            background-position: right 12px center;
+            padding-right: 32px;
             cursor: pointer;
         }
 
-        .form-select option {
-            background: var(--bg-surface);
+        /* Autocomplete Dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #111114;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+        }
+
+        .autocomplete-item {
+            padding: 10px 14px;
+            font-size: 13px;
             color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.15s ease;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover {
+            background: #1c1c24;
+            color: #ffffff;
+        }
+
+        .autocomplete-item .item-sub {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-left: auto;
         }
 
         /* Search Feedback */
@@ -829,31 +866,54 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="searchRegiao">Região Alvo</label>
-                    <select class="form-select" id="searchRegiao">
-                        <option value="">Selecione a região...</option>
+                    <label class="form-label" for="searchEstado">1. Estado (UF)</label>
+                    <select class="form-select" id="searchEstado">
+                        <option value="">Selecione o estado (opcional)...</option>
                         <option value="Brasil todo">Brasil todo</option>
-                        <option value="São Paulo, SP, Brasil">São Paulo, SP</option>
-                        <option value="Rio de Janeiro, RJ, Brasil">Rio de Janeiro, RJ</option>
-                        <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
-                        <option value="Brasília, DF">Brasília, DF</option>
-                        <option value="Curitiba, PR">Curitiba, PR</option>
-                        <option value="Porto Alegre, RS">Porto Alegre, RS</option>
-                        <option value="Salvador, BA">Salvador, BA</option>
-                        <option value="Goiânia, GO">Goiânia, GO</option>
-                        <option value="Campinas, SP">Campinas, SP</option>
-                        <option value="__custom">✏️ Inserir manualmente...</option>
+                        <option value="AC">Acre (AC)</option>
+                        <option value="AL">Alagoas (AL)</option>
+                        <option value="AP">Amapá (AP)</option>
+                        <option value="AM">Amazonas (AM)</option>
+                        <option value="BA">Bahia (BA)</option>
+                        <option value="CE">Ceará (CE)</option>
+                        <option value="DF">Distrito Federal (DF)</option>
+                        <option value="ES">Espírito Santo (ES)</option>
+                        <option value="GO">Goiás (GO)</option>
+                        <option value="MA">Maranhão (MA)</option>
+                        <option value="MT">Mato Grosso (MT)</option>
+                        <option value="MS">Mato Grosso do Sul (MS)</option>
+                        <option value="MG">Minas Gerais (MG)</option>
+                        <option value="PA">Pará (PA)</option>
+                        <option value="PB">Paraíba (PB)</option>
+                        <option value="PR">Paraná (PR)</option>
+                        <option value="PE">Pernambuco (PE)</option>
+                        <option value="PI">Piauí (PI)</option>
+                        <option value="RJ">Rio de Janeiro (RJ)</option>
+                        <option value="RN">Rio Grande do Norte (RN)</option>
+                        <option value="RS">Rio Grande do Sul (RS)</option>
+                        <option value="RO">Rondônia (RO)</option>
+                        <option value="RR">Roraima (RR)</option>
+                        <option value="SC">Santa Catarina (SC)</option>
+                        <option value="SP">São Paulo (SP)</option>
+                        <option value="SE">Sergipe (SE)</option>
+                        <option value="TO">Tocantins (TO)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="searchQtd">Quantidade de Leads</label>
-                    <input class="form-input" id="searchQtd" type="number" min="1" max="30" value="10" />
+                    <input class="form-input" id="searchQtd" type="number" min="1" max="50" value="10" />
                 </div>
 
-                <div class="form-group full-width" id="customRegiaoGroup" style="display: none;">
-                    <label class="form-label" for="customRegiao">Região Personalizada</label>
-                    <input class="form-input" id="customRegiao" placeholder="Ex: Moema, São Paulo ou Ribeirão Preto, SP" />
+                <div class="form-group autocomplete-container">
+                    <label class="form-label" for="searchCidade">2. Cidade / Município</label>
+                    <input class="form-input" id="searchCidade" placeholder="Ex: Sorocaba, Campinas, Curitiba..." autocomplete="off" oninput="onCidadeInput(this.value)" />
+                    <div class="autocomplete-dropdown" id="cidadeSuggestions"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="searchBairro">3. Bairro / Região (Opcional)</label>
+                    <input class="form-input" id="searchBairro" placeholder="Ex: Moema, Centro, Alphaville..." />
                 </div>
             </div>
 
@@ -1038,15 +1098,116 @@ function switchTab(tabName, btnEl) {
     if (tabName === 'leads') loadLeads();
 }
 
-document.getElementById('searchRegiao').addEventListener('change', function() {
-    const customGroup = document.getElementById('customRegiaoGroup');
-    if (this.value === '__custom') {
-        customGroup.style.display = 'block';
-        document.getElementById('customRegiao').focus();
-    } else {
-        customGroup.style.display = 'none';
+const UF_MAP = {
+    'ACRE': 'AC', 'ALAGOAS': 'AL', 'AMAPA': 'AP', 'AMAZONAS': 'AM', 'BAHIA': 'BA',
+    'CEARA': 'CE', 'DISTRITO FEDERAL': 'DF', 'ESPIRITO SANTO': 'ES', 'GOIAS': 'GO',
+    'MARANHAO': 'MA', 'MATO GROSSO': 'MT', 'MATO GROSSO DO SUL': 'MS', 'MINAS GERAIS': 'MG',
+    'PARA': 'PA', 'PARAIBA': 'PB', 'PARANA': 'PR', 'PERNAMBUCO': 'PE', 'PIAUI': 'PI',
+    'RIO DE JANEIRO': 'RJ', 'RIO GRANDE DO NORTE': 'RN', 'RIO GRANDE DO SUL': 'RS',
+    'RONDONIA': 'RO', 'RORAIMA': 'RR', 'SANTA CATARINA': 'SC', 'SAO PAULO': 'SP',
+    'SERGIPE': 'SE', 'TOCANTINS': 'TO'
+};
+
+function getStateCode(stateName) {
+    if (!stateName) return '';
+    if (stateName.length === 2) return stateName.toUpperCase();
+    const normalized = stateName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    return UF_MAP[normalized] || '';
+}
+
+let cidadeDebounceTimer = null;
+function onCidadeInput(query) {
+    clearTimeout(cidadeDebounceTimer);
+    const dropdown = document.getElementById('cidadeSuggestions');
+    if (!query || query.trim().length < 2) {
+        dropdown.classList.remove('active');
+        dropdown.innerHTML = '';
+        return;
+    }
+
+    cidadeDebounceTimer = setTimeout(async () => {
+        try {
+            const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=pt&limit=6&bbox=-73.99,-33.75,-34.79,5.27`);
+            if (!res.ok) return;
+            const data = await res.json();
+            
+            if (!data.features || data.features.length === 0) {
+                dropdown.classList.remove('active');
+                return;
+            }
+
+            let html = '';
+            const added = new Set();
+            data.features.forEach(f => {
+                const props = f.properties;
+                const city = props.city || props.name || props.county;
+                const state = props.state;
+                if (!city) return;
+                
+                const uf = getStateCode(state);
+                const key = `${city}-${uf}`;
+                if (added.has(key)) return;
+                added.add(key);
+
+                const subLabel = props.country || 'Brasil';
+
+                html += `
+                    <div class="autocomplete-item" onclick="selectSuggestion('${city.replace(/'/g, "\\'")}', '${uf}')">
+                        <span><strong>${city}</strong>${uf ? ', ' + uf : ''}</span>
+                        <span class="sub-text">${subLabel}</span>
+                    </div>
+                `;
+            });
+
+            if (html) {
+                dropdown.innerHTML = html;
+                dropdown.classList.add('active');
+            } else {
+                dropdown.classList.remove('active');
+            }
+        } catch (e) {
+            console.error('Erro na busca de cidades:', e);
+        }
+    }, 250);
+}
+
+function selectSuggestion(city, uf) {
+    document.getElementById('searchCidade').value = city;
+    if (uf) {
+        const stateSelect = document.getElementById('searchEstado');
+        if (stateSelect.querySelector(`option[value="${uf}"]`)) {
+            stateSelect.value = uf;
+        }
+    }
+    const dropdown = document.getElementById('cidadeSuggestions');
+    dropdown.classList.remove('active');
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.autocomplete-container')) {
+        const dropdown = document.getElementById('cidadeSuggestions');
+        if (dropdown) dropdown.classList.remove('active');
     }
 });
+
+function getFinalRegiao() {
+    const estado = document.getElementById('searchEstado').value.trim();
+    const cidade = document.getElementById('searchCidade').value.trim();
+    const bairro = document.getElementById('searchBairro').value.trim();
+
+    const parts = [];
+    if (bairro) parts.push(bairro);
+    if (cidade) parts.push(cidade);
+    if (estado && estado !== 'Brasil todo') parts.push(estado);
+
+    if (parts.length === 0) {
+        if (estado === 'Brasil todo') return 'Brasil todo';
+        return '';
+    }
+
+    parts.push('Brasil');
+    return parts.join(', ');
+}
 
 async function dispatchSearch() {
     const cfg = getConfig();
@@ -1058,20 +1219,17 @@ async function dispatchSearch() {
     }
 
     const nicho = document.getElementById('searchNicho').value.trim();
-    const regiaoSelect = document.getElementById('searchRegiao').value;
-    const regiao = regiaoSelect === '__custom'
-        ? document.getElementById('customRegiao').value.trim()
-        : regiaoSelect;
+    const regiao = getFinalRegiao();
     const quantidade = parseInt(document.getElementById('searchQtd').value) || 10;
 
     if (!nicho) {
-        showToast('Informe o nicho.', 'error');
+        showToast('Informe o nicho de atuação.', 'error');
         document.getElementById('searchNicho').focus();
         return;
     }
     if (!regiao) {
-        showToast('Informe a região.', 'error');
-        document.getElementById('searchRegiao').focus();
+        showToast('Selecione pelo menos um Estado, Cidade ou Bairro.', 'error');
+        document.getElementById('searchCidade').focus();
         return;
     }
 
