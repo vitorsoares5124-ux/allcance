@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/logo.png",
+      "destination": "/frontend/logo.png"
+    },
+    {
+      "source": "/logo_b64.txt",
+      "destination": "/frontend/logo_b64.txt"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/index.html"
+    }
+  ]
+}
