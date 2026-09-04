@@ -862,63 +862,32 @@
             <div class="form-grid">
                 <div class="form-group full-width">
                     <label class="form-label" for="searchNicho">Nicho de Atuação</label>
-                    <input class="form-input" id="searchNicho" placeholder="Ex: Clínica de Estética, Advogado, Restaurante..." />
+                    <input class="form-input" id="searchNicho" placeholder="Ex: Clínica de Estética, Advogado, Restaurante..." oninput="validateSearchForm()" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="searchEstado">1. Estado (UF)</label>
-                    <select class="form-select" id="searchEstado">
-                        <option value="">Selecione o estado (opcional)...</option>
-                        <option value="Brasil todo">Brasil todo</option>
-                        <option value="AC">Acre (AC)</option>
-                        <option value="AL">Alagoas (AL)</option>
-                        <option value="AP">Amapá (AP)</option>
-                        <option value="AM">Amazonas (AM)</option>
-                        <option value="BA">Bahia (BA)</option>
-                        <option value="CE">Ceará (CE)</option>
-                        <option value="DF">Distrito Federal (DF)</option>
-                        <option value="ES">Espírito Santo (ES)</option>
-                        <option value="GO">Goiás (GO)</option>
-                        <option value="MA">Maranhão (MA)</option>
-                        <option value="MT">Mato Grosso (MT)</option>
-                        <option value="MS">Mato Grosso do Sul (MS)</option>
-                        <option value="MG">Minas Gerais (MG)</option>
-                        <option value="PA">Pará (PA)</option>
-                        <option value="PB">Paraíba (PB)</option>
-                        <option value="PR">Paraná (PR)</option>
-                        <option value="PE">Pernambuco (PE)</option>
-                        <option value="PI">Piauí (PI)</option>
-                        <option value="RJ">Rio de Janeiro (RJ)</option>
-                        <option value="RN">Rio Grande do Norte (RN)</option>
-                        <option value="RS">Rio Grande do Sul (RS)</option>
-                        <option value="RO">Rondônia (RO)</option>
-                        <option value="RR">Roraima (RR)</option>
-                        <option value="SC">Santa Catarina (SC)</option>
-                        <option value="SP">São Paulo (SP)</option>
-                        <option value="SE">Sergipe (SE)</option>
-                        <option value="TO">Tocantins (TO)</option>
-                    </select>
+                <div class="form-group autocomplete-container full-width">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label class="form-label" for="searchCidadeInput" style="margin-bottom: 0;">Digite a cidade</label>
+                        <label style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+                            <input type="checkbox" id="chkBrasilTodo" style="accent-color: #ffffff; cursor: pointer;" onchange="toggleBrasilTodo(this.checked)" />
+                            Buscar em todo o Brasil
+                        </label>
+                    </div>
+                    <input class="form-input" id="searchCidadeInput" placeholder="Ex: Sorocaba, Belo Horizonte, Curitiba..." autocomplete="off" oninput="onCidadeInput(this.value)" />
+                    <div class="autocomplete-dropdown" id="cidadeSuggestions"></div>
+                    <small id="cidadeHelp" style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px; display: block;">
+                        * Digite e selecione uma cidade na lista para habilitar a busca.
+                    </small>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label class="form-label" for="searchQtd">Quantidade de Leads</label>
                     <input class="form-input" id="searchQtd" type="number" min="1" max="50" value="10" />
-                </div>
-
-                <div class="form-group autocomplete-container">
-                    <label class="form-label" for="searchCidade">2. Cidade / Município</label>
-                    <input class="form-input" id="searchCidade" placeholder="Ex: Sorocaba, Campinas, Curitiba..." autocomplete="off" oninput="onCidadeInput(this.value)" />
-                    <div class="autocomplete-dropdown" id="cidadeSuggestions"></div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="searchBairro">3. Bairro / Região (Opcional)</label>
-                    <input class="form-input" id="searchBairro" placeholder="Ex: Moema, Centro, Alphaville..." />
                 </div>
             </div>
 
             <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-                <button class="btn btn-primary" id="btnSearch" onclick="dispatchSearch()">
+                <button class="btn btn-primary" id="btnSearch" onclick="dispatchSearch()" disabled>
                     Iniciar Varredura
                 </button>
             </div>
@@ -1112,75 +1081,146 @@ function getStateCode(stateName) {
     if (!stateName) return '';
     if (stateName.length === 2) return stateName.toUpperCase();
     const normalized = stateName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-    return UF_MAP[normalized] || '';
+    return UF_MAP[normalized] || stateName;
 }
 
 let cidadeDebounceTimer = null;
+let currentSuggestions = [];
+let selectedLocation = null;
+
+function validateSearchForm() {
+    const nicho = document.getElementById('searchNicho').value.trim();
+    const chkBrasil = document.getElementById('chkBrasilTodo').checked;
+    const btn = document.getElementById('btnSearch');
+    
+    const isValid = Boolean(nicho && (chkBrasil || selectedLocation));
+    if (btn) btn.disabled = !isValid;
+}
+
+function toggleBrasilTodo(checked) {
+    const cityInput = document.getElementById('searchCidadeInput');
+    const help = document.getElementById('cidadeHelp');
+    const dropdown = document.getElementById('cidadeSuggestions');
+
+    if (dropdown) dropdown.classList.remove('active');
+
+    if (checked) {
+        cityInput.value = "Brasil todo";
+        cityInput.disabled = true;
+        selectedLocation = { formatted: "Brasil todo", isBrasilTodo: true };
+        if (help) help.innerHTML = '<span style="color: #a1a1aa;">✓ Varredura configurada para todo o Brasil.</span>';
+    } else {
+        cityInput.value = "";
+        cityInput.disabled = false;
+        selectedLocation = null;
+        if (help) help.innerHTML = '* Digite e selecione uma cidade na lista para habilitar a busca.';
+    }
+    validateSearchForm();
+}
+
 function onCidadeInput(query) {
     clearTimeout(cidadeDebounceTimer);
+    
+    selectedLocation = null;
+    validateSearchForm();
+
     const dropdown = document.getElementById('cidadeSuggestions');
+    const help = document.getElementById('cidadeHelp');
+    if (help) help.innerHTML = '<span style="color: #ef4444;">* Selecione uma cidade da lista para habilitar a busca.</span>';
+
     if (!query || query.trim().length < 2) {
         dropdown.classList.remove('active');
         dropdown.innerHTML = '';
+        currentSuggestions = [];
         return;
     }
 
     cidadeDebounceTimer = setTimeout(async () => {
         try {
-            const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=pt&limit=6&bbox=-73.99,-33.75,-34.79,5.27`);
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=br&format=json&addressdetails=1&limit=8`, {
+                headers: {
+                    'User-Agent': 'AllcanceLeadProspector/1.0 (contact@allcance.com)'
+                }
+            });
+
             if (!res.ok) return;
             const data = await res.json();
             
-            if (!data.features || data.features.length === 0) {
+            if (!Array.isArray(data) || data.length === 0) {
+                dropdown.classList.remove('active');
+                currentSuggestions = [];
+                return;
+            }
+
+            const cityResults = [];
+            const addedKeys = new Set();
+
+            data.forEach(item => {
+                const addr = item.address || {};
+                const cityName = addr.city || addr.town || addr.municipality || addr.village || addr.city_district;
+                
+                if (!cityName) return;
+
+                const stateName = addr.state || '';
+                const uf = getStateCode(stateName);
+                const key = `${cityName.toLowerCase()}-${uf}`;
+
+                if (addedKeys.has(key)) return;
+                addedKeys.add(key);
+
+                const formatted = uf ? `${cityName}, ${uf}, Brasil` : `${cityName}, Brasil`;
+
+                cityResults.push({
+                    city: cityName,
+                    state: stateName,
+                    uf: uf,
+                    lat: item.lat,
+                    lon: item.lon,
+                    formatted: formatted
+                });
+            });
+
+            currentSuggestions = cityResults.slice(0, 5);
+
+            if (currentSuggestions.length === 0) {
                 dropdown.classList.remove('active');
                 return;
             }
 
             let html = '';
-            const added = new Set();
-            data.features.forEach(f => {
-                const props = f.properties;
-                const city = props.city || props.name || props.county;
-                const state = props.state;
-                if (!city) return;
-                
-                const uf = getStateCode(state);
-                const key = `${city}-${uf}`;
-                if (added.has(key)) return;
-                added.add(key);
-
-                const subLabel = props.country || 'Brasil';
-
+            currentSuggestions.forEach((loc, idx) => {
                 html += `
-                    <div class="autocomplete-item" onclick="selectSuggestion('${city.replace(/'/g, "\\'")}', '${uf}')">
-                        <span><strong>${city}</strong>${uf ? ', ' + uf : ''}</span>
-                        <span class="sub-text">${subLabel}</span>
+                    <div class="autocomplete-item" onclick="selectSuggestion(${idx})">
+                        <span><strong>${loc.city}</strong>${loc.uf ? ', ' + loc.uf : ''}</span>
+                        <span class="sub-text">Brasil</span>
                     </div>
                 `;
             });
 
-            if (html) {
-                dropdown.innerHTML = html;
-                dropdown.classList.add('active');
-            } else {
-                dropdown.classList.remove('active');
-            }
+            dropdown.innerHTML = html;
+            dropdown.classList.add('active');
         } catch (e) {
-            console.error('Erro na busca de cidades:', e);
+            console.error('Erro na Nominatim API:', e);
         }
-    }, 250);
+    }, 300);
 }
 
-function selectSuggestion(city, uf) {
-    document.getElementById('searchCidade').value = city;
-    if (uf) {
-        const stateSelect = document.getElementById('searchEstado');
-        if (stateSelect.querySelector(`option[value="${uf}"]`)) {
-            stateSelect.value = uf;
-        }
-    }
+function selectSuggestion(index) {
+    const loc = currentSuggestions[index];
+    if (!loc) return;
+
+    selectedLocation = loc;
+    document.getElementById('searchCidadeInput').value = loc.formatted;
+    
     const dropdown = document.getElementById('cidadeSuggestions');
-    dropdown.classList.remove('active');
+    if (dropdown) dropdown.classList.remove('active');
+
+    const help = document.getElementById('cidadeHelp');
+    if (help) {
+        help.innerHTML = `<span style="color: #22c55e;">✓ Cidade confirmada: ${loc.formatted}</span>`;
+    }
+
+    validateSearchForm();
 }
 
 document.addEventListener('click', function(e) {
@@ -1189,25 +1229,6 @@ document.addEventListener('click', function(e) {
         if (dropdown) dropdown.classList.remove('active');
     }
 });
-
-function getFinalRegiao() {
-    const estado = document.getElementById('searchEstado').value.trim();
-    const cidade = document.getElementById('searchCidade').value.trim();
-    const bairro = document.getElementById('searchBairro').value.trim();
-
-    const parts = [];
-    if (bairro) parts.push(bairro);
-    if (cidade) parts.push(cidade);
-    if (estado && estado !== 'Brasil todo') parts.push(estado);
-
-    if (parts.length === 0) {
-        if (estado === 'Brasil todo') return 'Brasil todo';
-        return '';
-    }
-
-    parts.push('Brasil');
-    return parts.join(', ');
-}
 
 async function dispatchSearch() {
     const cfg = getConfig();
@@ -1219,7 +1240,20 @@ async function dispatchSearch() {
     }
 
     const nicho = document.getElementById('searchNicho').value.trim();
-    const regiao = getFinalRegiao();
+    const chkBrasil = document.getElementById('chkBrasilTodo').checked;
+    
+    let regiao = '';
+    let lat = null;
+    let lon = null;
+
+    if (chkBrasil) {
+        regiao = 'Brasil todo';
+    } else if (selectedLocation) {
+        regiao = selectedLocation.formatted;
+        lat = selectedLocation.lat;
+        lon = selectedLocation.lon;
+    }
+
     const quantidade = parseInt(document.getElementById('searchQtd').value) || 10;
 
     if (!nicho) {
@@ -1228,8 +1262,8 @@ async function dispatchSearch() {
         return;
     }
     if (!regiao) {
-        showToast('Selecione pelo menos um Estado, Cidade ou Bairro.', 'error');
-        document.getElementById('searchCidade').focus();
+        showToast('Selecione uma cidade válida na lista.', 'error');
+        document.getElementById('searchCidadeInput').focus();
         return;
     }
 
@@ -1240,6 +1274,16 @@ async function dispatchSearch() {
     showFeedback('Executando...', 'Disparando workflow no GitHub Actions...');
 
     try {
+        const payloadInputs = {
+            nicho: nicho,
+            regiao: regiao,
+            quantidade: String(quantidade),
+        };
+        if (lat && lon) {
+            payloadInputs.lat = String(lat);
+            payloadInputs.lon = String(lon);
+        }
+
         const response = await fetch(
             `https://api.github.com/repos/${cfg.githubRepo}/actions/workflows/scraper.yml/dispatches`,
             {
@@ -1251,11 +1295,7 @@ async function dispatchSearch() {
                 },
                 body: JSON.stringify({
                     ref: 'main',
-                    inputs: {
-                        nicho: nicho,
-                        regiao: regiao,
-                        quantidade: String(quantidade),
-                    }
+                    inputs: payloadInputs
                 })
             }
         );
