@@ -10,214 +10,159 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ============================================================
-           DESIGN TOKENS & SYSTEM VARIABLES (Vercel + Linear + Nubank)
+           MONOCHROMATIC DESIGN SYSTEM (Pure Black & White Vercel Style)
            ============================================================ */
         :root {
-            /* Superfícies & Profundidade */
-            --bg-base:          #070709;
-            --bg-surface:       #0d0d11;
-            --bg-surface-elev:  #131318;
-            --bg-surface-hover: #181820;
-            --bg-glass:         rgba(13, 13, 17, 0.75);
-            --bg-input:         #0a0a0e;
+            --bg-base:          #000000;
+            --bg-surface:       #0a0a0a;
+            --bg-surface-elev:  #121212;
+            --bg-surface-hover: #1a1a1a;
+            --bg-input:         #0d0d0d;
             
-            /* Bordas & Divisores */
-            --border-subtle:    rgba(255, 255, 255, 0.07);
-            --border-medium:    rgba(255, 255, 255, 0.12);
-            --border-focus:     rgba(139, 92, 246, 0.5);
-            --border-highlight: rgba(255, 255, 255, 0.2);
+            --border-subtle:    #222222;
+            --border-medium:    #333333;
+            --border-focus:     #666666;
+            --border-highlight: #ffffff;
 
-            /* Tipografia & Contraste */
-            --text-primary:     #f4f4f6;
-            --text-secondary:   #9ca3af;
-            --text-tertiary:    #6b7280;
-            --text-muted:       #4b5563;
+            --text-primary:     #ffffff;
+            --text-secondary:   #a1a1aa;
+            --text-tertiary:    #71717a;
+            --text-muted:       #52525b;
 
-            /* Brand & Accent (Allcance Violet + Emerald) */
-            --brand-primary:       #8b5cf6;
-            --brand-primary-hover: #7c3aed;
-            --brand-glow:          rgba(139, 92, 246, 0.25);
-            --brand-gradient:      linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #6d28d9 100%);
-            
-            --accent-emerald:      #10b981;
-            --accent-emerald-bg:   rgba(16, 185, 129, 0.12);
-            --accent-emerald-border: rgba(16, 185, 129, 0.25);
-            
-            --accent-amber:        #f59e0b;
-            --accent-amber-bg:     rgba(245, 158, 11, 0.12);
-            --accent-amber-border: rgba(245, 158, 11, 0.25);
-
-            --accent-rose:         #f43f5e;
-            --accent-rose-bg:      rgba(244, 63, 94, 0.12);
-            --accent-rose-border:  rgba(244, 63, 94, 0.25);
-
-            --accent-sky:          #0ea5e9;
-            --accent-sky-bg:       rgba(14, 165, 233, 0.12);
-            --accent-sky-border:   rgba(14, 165, 233, 0.25);
-
-            /* Raios & Espaçamento */
             --radius-sm:  6px;
-            --radius-md:  10px;
-            --radius-lg:  14px;
-            --radius-xl:  20px;
+            --radius-md:  8px;
+            --radius-lg:  12px;
+            --radius-xl:  16px;
             --radius-pill: 9999px;
 
-            /* Sombras & Efeitos */
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-subtle);
-            --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 0 1px var(--border-medium);
-            --shadow-glow: 0 0 24px var(--brand-glow);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 0 1px var(--border-subtle);
         }
 
-        /* ============================================================
-           RESET & GLOBAL BASE
-           ============================================================ */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-base);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.5;
-            background-image: 
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.12), transparent),
-                radial-gradient(ellipse 40% 30% at 90% 20%, rgba(14, 165, 233, 0.05), transparent);
-            background-attachment: fixed;
             overflow-x: hidden;
         }
 
-        /* Scrollbar customizada */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: #26262e; border-radius: var(--radius-pill); }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f4e; }
-
         .app-container {
-            max-width: 1200px;
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 24px 24px 80px 24px;
+            padding: 24px 20px 80px 20px;
         }
 
         /* ============================================================
-           HEADER & BRAND IDENTITY
+           HEADER (Pure Clean Monochromatic + Pure PNG Logo)
            ============================================================ */
         header.app-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 20px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            padding: 14px 18px;
+            background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            margin-bottom: 28px;
-            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             text-decoration: none;
+            min-width: 0;
+            flex: 1;
         }
 
-        .brand-logo-frame {
-            width: 38px;
-            height: 38px;
-            border-radius: var(--radius-md);
-            background: linear-gradient(135deg, #1c1c24 0%, #0d0d12 100%);
-            border: 1px solid var(--border-medium);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .brand-logo-frame::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
-            pointer-events: none;
-        }
-
-        .brand-logo-frame img {
-            width: 100%;
-            height: 100%;
+        /* Logo limpa em PNG sem caixa ou efeitos */
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
             object-fit: contain;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
+            display: block;
+            flex-shrink: 0;
         }
 
         .brand-titles {
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
-        .brand-name {
-            font-size: 17px;
-            font-weight: 800;
-            letter-spacing: -0.4px;
-            color: #ffffff;
+        .brand-name-row {
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .brand-name .badge-pro {
+        .brand-name {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .brand-badge {
             font-size: 10px;
             font-weight: 700;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             padding: 2px 7px;
             border-radius: var(--radius-pill);
-            background: var(--brand-glow);
-            color: #c4b5fd;
-            border: 1px solid rgba(139, 92, 246, 0.35);
+            background: var(--bg-surface-elev);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-medium);
         }
 
         .brand-subtitle {
             font-size: 12px;
-            font-weight: 500;
             color: var(--text-tertiary);
-            letter-spacing: -0.1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            flex-shrink: 0;
         }
 
         /* ============================================================
-           TAB NAVIGATION (Linear Style)
+           NAVIGATION TABS (Vercel Linear Clean)
            ============================================================ */
         .tabs-nav {
-            display: inline-flex;
+            display: flex;
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 4px;
             gap: 4px;
-            margin-bottom: 24px;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 380px;
         }
 
         .tab-btn {
+            flex: 1;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            padding: 8px 18px;
+            padding: 9px 14px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
@@ -225,53 +170,52 @@
             font-weight: 600;
             border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.15s ease;
             font-family: inherit;
         }
 
         .tab-btn:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.04);
+            color: #ffffff;
+            background: var(--bg-surface-elev);
         }
 
         .tab-btn.active {
-            background: var(--bg-surface-elev);
-            color: #ffffff;
-            border: 1px solid var(--border-medium);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            background: #ffffff;
+            color: #000000;
+            font-weight: 700;
         }
 
         .tab-btn .tab-count {
             font-size: 11px;
             font-weight: 700;
-            padding: 1px 7px;
+            padding: 1px 6px;
             border-radius: var(--radius-pill);
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--text-secondary);
             font-family: 'JetBrains Mono', monospace;
         }
 
         .tab-btn.active .tab-count {
-            background: var(--brand-glow);
-            color: #c4b5fd;
+            background: rgba(0, 0, 0, 0.15);
+            color: #000000;
         }
 
         .tab-pane { display: none; }
-        .tab-pane.active { display: block; animation: fadeIn 0.25s ease-out; }
+        .tab-pane.active { display: block; animation: fadeIn 0.15s ease-out; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(3px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
         /* ============================================================
-           BUTTON SYSTEM (Vercel & Linear Standard)
+           BUTTONS (Pure Monochromatic Black & White System)
            ============================================================ */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 7px;
             font-family: inherit;
             font-size: 13px;
             font-weight: 600;
@@ -280,45 +224,24 @@
             border: 1px solid transparent;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.15s ease;
             white-space: nowrap;
             line-height: 1;
         }
 
-        /* Botão Primário (Linear / Vercel White Gradient) */
+        /* Primário: Branco com texto preto */
         .btn-primary {
-            background: linear-gradient(180deg, #ffffff 0%, #e2e2e8 100%);
-            color: #09090b;
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 255, 255, 0.15);
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #ffffff;
         }
 
         .btn-primary:hover {
-            background: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
+            background: #e4e4e7;
+            border-color: #e4e4e7;
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Botão Brand / Destaque */
-        .btn-brand {
-            background: var(--brand-gradient);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.35);
-        }
-
-        .btn-brand:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 18px rgba(139, 92, 246, 0.5);
-        }
-
-        /* Botão Secundário */
+        /* Secundário: Fundo escuro com borda */
         .btn-secondary {
             background: var(--bg-surface-elev);
             color: var(--text-primary);
@@ -327,11 +250,11 @@
 
         .btn-secondary:hover {
             background: var(--bg-surface-hover);
-            border-color: var(--border-highlight);
+            border-color: var(--border-focus);
             color: #ffffff;
         }
 
-        /* Botão Ghost / Outline */
+        /* Ghost / Outline */
         .btn-ghost {
             background: transparent;
             color: var(--text-secondary);
@@ -339,77 +262,60 @@
         }
 
         .btn-ghost:hover {
-            background: var(--bg-surface-elev);
-            color: var(--text-primary);
+            background: var(--bg-surface);
             border-color: var(--border-medium);
+            color: #ffffff;
         }
 
-        /* Botão WhatsApp */
+        /* WhatsApp: Monocromático de alto contraste */
         .btn-whatsapp {
-            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-            color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            background: #ffffff;
+            color: #000000 !important;
+            border: 1px solid #ffffff;
+            font-weight: 700;
         }
 
         .btn-whatsapp:hover {
-            background: #10b981;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+            background: #e4e4e7;
         }
 
-        /* Botão Proposta - Gerar */
+        /* Gerar Proposta */
         .btn-generate {
-            background: linear-gradient(180deg, #242432 0%, #171722 100%);
-            color: #d8b4fe;
-            border: 1px solid rgba(168, 85, 247, 0.3);
+            background: var(--bg-surface-elev);
+            color: #ffffff;
+            border: 1px solid var(--border-medium);
         }
 
         .btn-generate:hover {
-            background: rgba(168, 85, 247, 0.15);
-            border-color: rgba(168, 85, 247, 0.6);
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 12px rgba(168, 85, 247, 0.25);
+            background: var(--bg-surface-hover);
+            border-color: #ffffff;
         }
 
-        /* Botão Proposta - Baixar */
+        /* Baixar PDF */
         .btn-download {
-            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
-            color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            background: #ffffff;
+            color: #000000 !important;
+            border: 1px solid #ffffff;
+            font-weight: 700;
         }
 
         .btn-download:hover {
-            background: #3b82f6;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
+            background: #e4e4e7;
         }
 
-        /* Variantes de Tamanho */
-        .btn-xs { padding: 4px 8px; font-size: 11px; border-radius: var(--radius-sm); }
-        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); }
-        .btn-lg { padding: 12px 24px; font-size: 14px; }
-        .btn-icon { padding: 8px; border-radius: var(--radius-md); }
-
-        .btn:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
+        .btn-xs { padding: 5px 10px; font-size: 11px; border-radius: var(--radius-sm); }
+        .btn-sm { padding: 7px 12px; font-size: 12px; border-radius: var(--radius-sm); }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
         /* ============================================================
-           SURFACES & CARDS
+           CARDS & PANELS
            ============================================================ */
         .card {
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-lg);
             padding: 24px;
-            box-shadow: var(--shadow-md);
-            position: relative;
+            box-shadow: var(--shadow-sm);
         }
 
         .card-header {
@@ -421,30 +327,10 @@
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        .card-header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .card-icon-badge {
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-md);
-            background: var(--bg-surface-elev);
-            border: 1px solid var(--border-medium);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--brand-primary);
-            font-size: 15px;
-        }
-
         .card-title {
             font-size: 15px;
             font-weight: 700;
             color: #ffffff;
-            letter-spacing: -0.2px;
         }
 
         .card-desc {
@@ -453,7 +339,7 @@
         }
 
         /* ============================================================
-           FORMS & INPUT SYSTEM
+           FORMS & INPUTS
            ============================================================ */
         .form-grid {
             display: grid;
@@ -468,17 +354,12 @@
             gap: 6px;
         }
 
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
+        .form-group.full-width { grid-column: 1 / -1; }
 
         .form-label {
             font-size: 12px;
             font-weight: 600;
             color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         .form-input, .form-select {
@@ -491,23 +372,19 @@
             color: var(--text-primary);
             font-family: inherit;
             outline: none;
-            transition: all 0.2s;
+            transition: border-color 0.15s ease;
         }
 
         .form-input:focus, .form-select:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 3px var(--brand-glow);
-            background: #0e0e14;
+            border-color: var(--border-highlight);
+            background: #111111;
         }
 
-        .form-input::placeholder {
-            color: var(--text-muted);
-        }
+        .form-input::placeholder { color: var(--text-muted); }
 
         .form-select {
             appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 14px center;
             padding-right: 36px;
@@ -517,99 +394,30 @@
         .form-select option {
             background: var(--bg-surface);
             color: var(--text-primary);
-            padding: 8px;
         }
 
-        /* Status de busca */
+        /* Search Feedback */
         .search-feedback {
             margin-top: 16px;
-            padding: 14px 18px;
-            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
             background: var(--bg-surface-elev);
             border: 1px solid var(--border-medium);
             display: none;
-            animation: fadeIn 0.2s ease-out;
         }
 
-        .search-feedback.visible { display: flex; align-items: flex-start; gap: 12px; }
-
-        .search-feedback.success {
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.25);
-        }
-
-        .search-feedback.error {
-            background: rgba(244, 63, 94, 0.08);
-            border-color: rgba(244, 63, 94, 0.25);
-        }
-
-        .feedback-content h4 {
-            font-size: 13px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 2px;
-        }
-
-        .feedback-content p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
+        .search-feedback.visible { display: block; }
+        .search-feedback h4 { font-size: 13px; font-weight: 700; color: #ffffff; margin-bottom: 2px; }
+        .search-feedback p { font-size: 12px; color: var(--text-secondary); }
 
         /* ============================================================
-           CONFIG MODAL / DRAWER (Estilo Vercel Settings)
-           ============================================================ */
-        .config-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .config-overlay.open {
-            display: flex;
-            animation: fadeIn 0.15s ease-out;
-        }
-
-        .config-modal {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-xl);
-            width: 100%;
-            max-width: 580px;
-            padding: 28px;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-        }
-
-        .config-modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .config-modal-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ============================================================
-           LEADS TABLE & DATA PRESENTATION (Linear Standard)
+           TOOLBAR & FILTERS (Clean & Non-Breaking on Mobile)
            ============================================================ */
         .leads-toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 16px;
             flex-wrap: wrap;
         }
@@ -631,21 +439,20 @@
             color: var(--text-primary);
             font-family: inherit;
             outline: none;
-            min-width: 180px;
-            transition: all 0.2s;
+            flex: 1;
+            min-width: 140px;
         }
 
-        .filter-input:focus {
-            border-color: var(--border-focus);
-            background: var(--bg-input);
-        }
+        .filter-input:focus { border-color: var(--border-medium); }
 
+        /* ============================================================
+           DESKTOP TABLE
+           ============================================================ */
         .table-container {
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
         }
 
         table.leads-table {
@@ -655,12 +462,12 @@
         }
 
         table.leads-table thead {
-            background: #09090d;
+            background: #050505;
             border-bottom: 1px solid var(--border-subtle);
         }
 
         table.leads-table th {
-            padding: 12px 18px;
+            padding: 12px 16px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
@@ -671,166 +478,85 @@
 
         table.leads-table tbody tr {
             border-bottom: 1px solid var(--border-subtle);
-            transition: background 0.15s ease;
         }
 
-        table.leads-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        table.leads-table tbody tr:hover {
-            background: var(--bg-surface-elev);
-        }
+        table.leads-table tbody tr:last-child { border-bottom: none; }
+        table.leads-table tbody tr:hover { background: var(--bg-surface-elev); }
 
         table.leads-table td {
-            padding: 14px 18px;
+            padding: 14px 16px;
             font-size: 13px;
             vertical-align: middle;
         }
 
-        /* Célula Principal: Nome + Telefone (Hierarquia Visual) */
         .lead-primary-cell {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
         }
 
         .lead-company-name {
             font-weight: 700;
             color: #ffffff;
             font-size: 14px;
-            letter-spacing: -0.2px;
         }
 
         .lead-company-phone {
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
             color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
-        /* Célula Secundária: Nicho + Região */
         .lead-context-cell {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
 
-        .lead-nicho-text {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .lead-region-text {
-            font-size: 11px;
-            color: var(--text-tertiary);
-        }
+        .lead-nicho-text { font-size: 12px; font-weight: 600; color: #ffffff; }
+        .lead-region-text { font-size: 11px; color: var(--text-tertiary); }
 
         /* ============================================================
-           BADGE SYSTEM (Consistent Icon + Color)
+           MONOCHROMATIC BADGES & STATUS
            ============================================================ */
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
+            gap: 5px;
+            padding: 3px 8px;
             border-radius: var(--radius-pill);
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             line-height: 1;
             text-decoration: none;
         }
 
         .badge-positive {
-            background: var(--accent-emerald-bg);
-            color: #34d399;
-            border: 1px solid var(--accent-emerald-border);
-        }
-
-        .badge-positive:hover {
-            background: rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
+            background: #ffffff;
+            color: #000000;
         }
 
         .badge-negative {
-            background: rgba(255, 255, 255, 0.03);
+            background: transparent;
             color: var(--text-muted);
             border: 1px solid var(--border-subtle);
         }
 
-        /* Status Select Dropdown */
         .lead-status-dropdown {
             padding: 5px 10px;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             border-radius: var(--radius-pill);
             background: var(--bg-base);
             border: 1px solid var(--border-medium);
-            color: var(--text-primary);
+            color: #ffffff;
             font-family: inherit;
             cursor: pointer;
             outline: none;
-            transition: all 0.2s;
-        }
-
-        .lead-status-dropdown.status-novo       { color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); background: rgba(56, 189, 248, 0.08); }
-        .lead-status-dropdown.status-contatado  { color: #fbbf24; border-color: rgba(251, 191, 36, 0.35); background: rgba(251, 191, 36, 0.08); }
-        .lead-status-dropdown.status-convertido { color: #34d399; border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.08); }
-        .lead-status-dropdown.status-descartado { color: #9ca3af; border-color: rgba(156, 163, 175, 0.2); background: rgba(156, 163, 175, 0.05); }
-
-        /* Ações na Tabela */
-        .table-action-stack {
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         /* ============================================================
-           EMPTY STATES (Designed & Human-made)
-           ============================================================ */
-        .empty-view {
-            padding: 64px 24px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .empty-illustration {
-            width: 56px;
-            height: 56px;
-            border-radius: var(--radius-lg);
-            background: var(--bg-surface-elev);
-            border: 1px solid var(--border-medium);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .empty-view h3 {
-            font-size: 15px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 6px;
-        }
-
-        .empty-view p {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            max-width: 340px;
-            margin-bottom: 20px;
-        }
-
-        /* ============================================================
-           MOBILE CARD LIST (Responsive Alternative to Tables)
+           MOBILE CARDS (Clean, Flawless Layout)
            ============================================================ */
         .mobile-lead-cards {
             display: none;
@@ -852,69 +578,116 @@
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
         }
 
         .mobile-lead-meta-row {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
+        }
+
+        .mobile-tag {
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: var(--bg-surface-elev);
+            border: 1px solid var(--border-subtle);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
         }
 
         .mobile-lead-actions-row {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding-top: 10px;
+            padding-top: 12px;
             border-top: 1px solid var(--border-subtle);
         }
 
+        .mobile-lead-actions-row .btn {
+            flex: 1;
+        }
+
         /* ============================================================
-           TOAST NOTIFICATIONS
+           CONFIG MODAL
            ============================================================ */
+        .config-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .config-overlay.open { display: flex; }
+
+        .config-modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 540px;
+            padding: 24px;
+        }
+
+        .config-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .config-modal-title { font-size: 15px; font-weight: 700; color: #ffffff; }
+
+        /* Empty State */
+        .empty-view {
+            padding: 60px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-view h3 { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .empty-view p { font-size: 13px; color: var(--text-tertiary); max-width: 320px; margin-bottom: 16px; }
+
+        /* Toast */
         .toast-viewport {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: 20px;
+            right: 20px;
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
+            gap: 8px;
         }
 
         .toast-item {
-            pointer-events: auto;
-            background: var(--bg-surface-elev);
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-md);
-            padding: 12px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #ffffff;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: toastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 400px;
+            background: #ffffff;
+            color: #000000;
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            animation: fadeIn 0.15s ease-out;
         }
 
         .toast-item.error {
-            border-color: var(--accent-rose-border);
-            background: #180d11;
-            color: #fecdd3;
-        }
-
-        @keyframes toastSlideIn {
-            from { transform: translateY(16px); opacity: 0; }
-            to   { transform: translateY(0); opacity: 1; }
+            background: #27272a;
+            color: #ffffff;
+            border: 1px solid #3f3f46;
         }
 
         .spinner {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border: 2px solid transparent;
             border-top: 2px solid currentColor;
             border-radius: 50%;
@@ -925,14 +698,43 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ============================================================
-           MEDIA QUERIES (Ultra Responsive)
+           MEDIA QUERIES (Mobile Layout Fix)
            ============================================================ */
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
+            .app-container { padding: 14px 14px 60px 14px; }
+            header.app-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+            }
+            .header-actions {
+                justify-content: flex-end;
+            }
+            .header-actions .btn {
+                width: 100%;
+            }
+            .tabs-nav {
+                max-width: 100%;
+            }
+            .leads-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            .filter-input {
+                width: 100%;
+            }
+            .leads-toolbar .btn {
+                width: 100%;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
             .table-container { display: none; }
             .mobile-lead-cards { display: flex; }
-            .form-grid { grid-template-columns: 1fr; }
-            .app-container { padding: 16px 16px 60px 16px; }
-            header.app-header { flex-direction: row; }
         }
     </style>
 </head>
@@ -941,142 +743,102 @@
 <div class="app-container">
 
     <!-- ======================================================
-         APP HEADER WITH LOGO & BRANDING
+         APP HEADER (Monocromático + PNG Oficial)
          ====================================================== -->
     <header class="app-header">
         <a href="#" class="brand">
-            <div class="brand-logo-frame">
-                <img src="logo.png" alt="Allcance Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%238b5cf6\'%3E%3Cpath d=\'M12 2L2 12h5v8h10v-8h5L12 2z\'/%3E%3C/svg%3E'" />
-            </div>
+            <img class="brand-logo-img" src="logo.png" alt="Allcance Logo" onerror="this.style.display='none'" />
             <div class="brand-titles">
-                <span class="brand-name">
-                    Allcance
-                    <span class="badge-pro">Lead Intelligence</span>
-                </span>
-                <span class="brand-subtitle">Prospecção Automatizada & Propostas Comerciais</span>
+                <div class="brand-name-row">
+                    <span class="brand-name">Allcance</span>
+                    <span class="brand-badge">PRO</span>
+                </div>
+                <span class="brand-subtitle">Prospecção & Inteligência de Leads</span>
             </div>
         </a>
 
         <div class="header-actions">
-            <button class="btn btn-ghost btn-sm" onclick="openConfigModal()" title="Configurar Integrações">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            <button class="btn btn-ghost btn-sm" onclick="openConfigModal()">
                 Configurações
             </button>
         </div>
     </header>
 
     <!-- ======================================================
-         NAVIGATION TABS (Linear Design)
+         NAVIGATION TABS
          ====================================================== -->
     <nav class="tabs-nav">
         <button class="tab-btn active" id="btn-tab-search" onclick="switchTab('search', this)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             Nova Prospecção
         </button>
         <button class="tab-btn" id="btn-tab-leads" onclick="switchTab('leads', this)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Leads Capturados
             <span class="tab-count" id="leadsTabBadge">0</span>
         </button>
     </nav>
 
     <!-- ======================================================
-         TAB 1: BUSCAR LEADS (SEARCH PANEL)
+         TAB 1: BUSCAR LEADS
          ====================================================== -->
     <div class="tab-pane active" id="pane-search">
-        <div class="card" style="max-width: 680px;">
+        <div class="card" style="max-width: 620px;">
             <div class="card-header">
-                <div class="card-header-left">
-                    <div class="card-icon-badge">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                    </div>
-                    <div>
-                        <h2 class="card-title">Parâmetros de Busca</h2>
-                        <span class="card-desc">Execute a extração de empresas no Google Maps via GitHub Actions</span>
-                    </div>
+                <div>
+                    <h2 class="card-title">Parâmetros de Busca</h2>
+                    <span class="card-desc">Extração de empresas no Google Maps via GitHub Actions</span>
                 </div>
             </div>
 
             <div class="form-grid">
                 <div class="form-group full-width">
-                    <label class="form-label" for="searchNicho">
-                        Nicho de Mercado / Atuação
-                    </label>
-                    <input class="form-input" id="searchNicho" placeholder="Ex: Clínica de Estética, Advogado Trabalhista, Restaurante..." />
+                    <label class="form-label" for="searchNicho">Nicho de Atuação</label>
+                    <input class="form-input" id="searchNicho" placeholder="Ex: Clínica de Estética, Advogado, Restaurante..." />
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="searchRegiao">
-                        Região Alvo
-                    </label>
+                    <label class="form-label" for="searchRegiao">Região Alvo</label>
                     <select class="form-select" id="searchRegiao">
                         <option value="">Selecione a região...</option>
-                        <optgroup label="Nacional">
-                            <option value="Brasil todo">🇧🇷 Brasil todo</option>
-                        </optgroup>
-                        <optgroup label="Principais Capitais">
-                            <option value="São Paulo, SP, Brasil">São Paulo, SP</option>
-                            <option value="Rio de Janeiro, RJ, Brasil">Rio de Janeiro, RJ</option>
-                            <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
-                            <option value="Brasília, DF">Brasília, DF</option>
-                            <option value="Curitiba, PR">Curitiba, PR</option>
-                            <option value="Porto Alegre, RS">Porto Alegre, RS</option>
-                            <option value="Salvador, BA">Salvador, BA</option>
-                            <option value="Fortaleza, CE">Fortaleza, CE</option>
-                            <option value="Goiânia, GO">Goiânia, GO</option>
-                            <option value="Campinas, SP">Campinas, SP</option>
-                            <option value="Florianópolis, SC">Florianópolis, SC</option>
-                        </optgroup>
-                        <optgroup label="Estados">
-                            <option value="São Paulo (estado)">São Paulo (Estado)</option>
-                            <option value="Rio de Janeiro (estado)">Rio de Janeiro (Estado)</option>
-                            <option value="Minas Gerais">Minas Gerais</option>
-                            <option value="Paraná">Paraná</option>
-                            <option value="Santa Catarina">Santa Catarina</option>
-                            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
-                            <option value="Bahia">Bahia</option>
-                            <option value="Ceará">Ceará</option>
-                        </optgroup>
-                        <optgroup label="Personalizado">
-                            <option value="__custom">✏️ Inserir cidade/bairro manualmente...</option>
-                        </optgroup>
+                        <option value="Brasil todo">Brasil todo</option>
+                        <option value="São Paulo, SP, Brasil">São Paulo, SP</option>
+                        <option value="Rio de Janeiro, RJ, Brasil">Rio de Janeiro, RJ</option>
+                        <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
+                        <option value="Brasília, DF">Brasília, DF</option>
+                        <option value="Curitiba, PR">Curitiba, PR</option>
+                        <option value="Porto Alegre, RS">Porto Alegre, RS</option>
+                        <option value="Salvador, BA">Salvador, BA</option>
+                        <option value="Goiânia, GO">Goiânia, GO</option>
+                        <option value="Campinas, SP">Campinas, SP</option>
+                        <option value="__custom">✏️ Inserir manualmente...</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="searchQtd">
-                        Quantidade de Leads
-                    </label>
+                    <label class="form-label" for="searchQtd">Quantidade de Leads</label>
                     <input class="form-input" id="searchQtd" type="number" min="1" max="30" value="10" />
                 </div>
 
                 <div class="form-group full-width" id="customRegiaoGroup" style="display: none;">
-                    <label class="form-label" for="customRegiao">
-                        Cidade, Estado ou Bairro Específico
-                    </label>
+                    <label class="form-label" for="customRegiao">Região Personalizada</label>
                     <input class="form-input" id="customRegiao" placeholder="Ex: Moema, São Paulo ou Ribeirão Preto, SP" />
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px;">
+            <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
                 <button class="btn btn-primary" id="btnSearch" onclick="dispatchSearch()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     Iniciar Varredura
                 </button>
             </div>
 
             <div class="search-feedback" id="searchFeedback">
-                <div id="feedbackIcon">⚡</div>
-                <div class="feedback-content">
-                    <h4 id="feedbackTitle">Status da Execução</h4>
-                    <p id="feedbackText">Aguardando início...</p>
-                </div>
+                <h4 id="feedbackTitle">Status</h4>
+                <p id="feedbackText">Aguardando...</p>
             </div>
         </div>
     </div>
 
     <!-- ======================================================
-         TAB 2: MEUS LEADS (TABLE & CARDS VIEW)
+         TAB 2: MEUS LEADS
          ====================================================== -->
     <div class="tab-pane" id="pane-leads">
         
@@ -1084,55 +846,51 @@
             <div class="filter-group">
                 <input class="filter-input" id="filterSearch" placeholder="Buscar por nome, telefone..." oninput="applyFilters()" />
                 <input class="filter-input" id="filterNicho" placeholder="Filtrar nicho..." oninput="applyFilters()" />
-                <select class="form-select" id="filterStatus" style="width: auto; padding: 7px 32px 7px 12px; font-size: 12px;" onchange="applyFilters()">
+                <select class="form-select" id="filterStatus" style="width: auto; min-width: 140px; padding: 8px 30px 8px 12px; font-size: 12px;" onchange="applyFilters()">
                     <option value="">Todos os status</option>
-                    <option value="novo">🔵 Novo</option>
-                    <option value="contatado">🟠 Contatado</option>
-                    <option value="convertido">🟢 Convertido</option>
-                    <option value="descartado">⚫ Descartado</option>
+                    <option value="novo">Novo</option>
+                    <option value="contatado">Contatado</option>
+                    <option value="convertido">Convertido</option>
+                    <option value="descartado">Descartado</option>
                 </select>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <button class="btn btn-secondary btn-sm" onclick="loadLeads()">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
-                    Atualizar Dados
-                </button>
-            </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadLeads()">
+                Atualizar Dados
+            </button>
         </div>
 
-        <!-- Desktop Table View -->
+        <!-- Desktop View -->
         <div class="table-container">
             <table class="leads-table">
                 <thead>
                     <tr>
                         <th>Lead / Empresa</th>
                         <th>Nicho & Região</th>
-                        <th>Presença Web</th>
+                        <th>Site</th>
                         <th>Instagram</th>
                         <th>Status</th>
-                        <th>Proposta Comercial</th>
+                        <th>Proposta</th>
                         <th style="text-align: right;">Ação</th>
                     </tr>
                 </thead>
                 <tbody id="leadsTableBody">
-                    <!-- Dynamic rendering -->
+                    <!-- JS Rendering -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Mobile Cards View (Responsive) -->
+        <!-- Mobile View (Cards) -->
         <div class="mobile-lead-cards" id="mobileCardsContainer">
-            <!-- Dynamic rendering -->
+            <!-- JS Rendering -->
         </div>
 
-        <!-- Empty State View -->
+        <!-- Empty State -->
         <div class="empty-view" id="emptyState" style="display: none;">
-            <div class="empty-illustration">📭</div>
             <h3>Nenhum lead encontrado</h3>
-            <p>Dispare uma nova varredura ou redefina os filtros para encontrar seus contatos.</p>
+            <p>Dispare uma nova varredura ou redefina os filtros.</p>
             <button class="btn btn-secondary btn-sm" onclick="switchTab('search', document.getElementById('btn-tab-search'))">
-                Fazer Nova Busca
+                Nova Prospecção
             </button>
         </div>
 
@@ -1140,20 +898,15 @@
 
 </div>
 
-<!-- ======================================================
-     CONFIG MODAL (Drawer / Modal Style)
-     ====================================================== -->
+<!-- Config Modal -->
 <div class="config-overlay" id="configOverlay" onclick="if(event.target===this) closeConfigModal()">
     <div class="config-modal">
         <div class="config-modal-header">
-            <h3 class="config-modal-title">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                Integrações & Conexões
-            </h3>
+            <h3 class="config-modal-title">Configurações & Integrações</h3>
             <button class="btn btn-ghost btn-xs" onclick="closeConfigModal()">✕</button>
         </div>
 
-        <div class="form-grid" style="margin-bottom: 24px;">
+        <div class="form-grid" style="margin-bottom: 20px;">
             <div class="form-group">
                 <label class="form-label" for="cfgSupabaseUrl">Supabase URL</label>
                 <input class="form-input" id="cfgSupabaseUrl" placeholder="https://xxx.supabase.co" />
@@ -1176,20 +929,16 @@
             </div>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; gap: 10px;">
-            <button class="btn btn-secondary" onclick="closeConfigModal()">Cancelar</button>
-            <button class="btn btn-primary" onclick="saveConfig()">Salvar Alterações</button>
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+            <button class="btn btn-secondary btn-sm" onclick="closeConfigModal()">Cancelar</button>
+            <button class="btn btn-primary btn-sm" onclick="saveConfig()">Salvar</button>
         </div>
     </div>
 </div>
 
-<!-- Toast Container -->
 <div class="toast-viewport" id="toastViewport"></div>
 
 <script>
-// ============================================================
-// STATE & STORAGE
-// ============================================================
 let supabaseClient = null;
 let allLeads = [];
 let generatingLeads = new Set();
@@ -1212,7 +961,7 @@ function saveConfig() {
     localStorage.setItem('lp_gemini_key',    document.getElementById('cfgGeminiKey').value.trim());
     initSupabase(true);
     closeConfigModal();
-    showToast('Configurações salvas com sucesso!');
+    showToast('Configurações salvas!');
 }
 
 function loadConfigInputs() {
@@ -1245,9 +994,6 @@ function initSupabase(force = false) {
     return false;
 }
 
-// ============================================================
-// TAB NAVIGATION
-// ============================================================
 function switchTab(tabName, btnEl) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -1259,7 +1005,6 @@ function switchTab(tabName, btnEl) {
     if (tabName === 'leads') loadLeads();
 }
 
-// Seletor de região personalizada
 document.getElementById('searchRegiao').addEventListener('change', function() {
     const customGroup = document.getElementById('customRegiaoGroup');
     if (this.value === '__custom') {
@@ -1270,14 +1015,11 @@ document.getElementById('searchRegiao').addEventListener('change', function() {
     }
 });
 
-// ============================================================
-// DISPATCH SCRAPER (GITHUB ACTIONS)
-// ============================================================
 async function dispatchSearch() {
     const cfg = getConfig();
 
     if (!cfg.githubRepo || !cfg.githubToken) {
-        showToast('Configure o GitHub Repo e Token nas configurações.', 'error');
+        showToast('Configure o GitHub Token nas configurações.', 'error');
         openConfigModal();
         return;
     }
@@ -1290,21 +1032,21 @@ async function dispatchSearch() {
     const quantidade = parseInt(document.getElementById('searchQtd').value) || 10;
 
     if (!nicho) {
-        showToast('Informe o nicho de atuação.', 'error');
+        showToast('Informe o nicho.', 'error');
         document.getElementById('searchNicho').focus();
         return;
     }
     if (!regiao) {
-        showToast('Selecione ou digite uma região.', 'error');
+        showToast('Informe a região.', 'error');
         document.getElementById('searchRegiao').focus();
         return;
     }
 
     const btn = document.getElementById('btnSearch');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Disparando Varredura...';
+    btn.innerHTML = '<span class="spinner"></span> Disparando...';
 
-    showFeedback('Executando...', 'Disparando workflow no GitHub Actions...', 'info');
+    showFeedback('Executando...', 'Disparando workflow no GitHub Actions...');
 
     try {
         const response = await fetch(
@@ -1329,9 +1071,8 @@ async function dispatchSearch() {
 
         if (response.status === 204 || response.ok) {
             showFeedback(
-                'Varredura em Execução',
-                `O robô está extraindo ${quantidade} leads de "${nicho}" em "${regiao}". Os contatos aparecerão na aba "Leads Capturados" assim que concluído.`,
-                'success'
+                'Varredura Iniciada',
+                `Extraindo ${quantidade} leads de "${nicho}" em "${regiao}". Aguarde alguns instantes e veja na aba "Leads Capturados".`
             );
             showToast('Workflow iniciado no GitHub Actions!');
         } else {
@@ -1339,32 +1080,24 @@ async function dispatchSearch() {
             throw new Error(err.message || response.statusText);
         }
     } catch (err) {
-        showFeedback('Falha no Disparo', err.message, 'error');
+        showFeedback('Erro no Disparo', err.message);
         showToast(`Erro: ${err.message}`, 'error');
     }
 
     btn.disabled = false;
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Iniciar Varredura';
+    btn.innerHTML = 'Iniciar Varredura';
 }
 
-function showFeedback(title, message, type) {
+function showFeedback(title, message) {
     const box = document.getElementById('searchFeedback');
-    const titleEl = document.getElementById('feedbackTitle');
-    const textEl = document.getElementById('feedbackText');
-    const iconEl = document.getElementById('feedbackIcon');
-
-    box.className = 'search-feedback visible ' + type;
-    titleEl.textContent = title;
-    textEl.innerHTML = message;
-    iconEl.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : '⏳';
+    document.getElementById('feedbackTitle').textContent = title;
+    document.getElementById('feedbackText').innerHTML = message;
+    box.className = 'search-feedback visible';
 }
 
-// ============================================================
-// LOAD LEADS FROM SUPABASE
-// ============================================================
 async function loadLeads() {
     if (!initSupabase()) {
-        showToast('Configure o Supabase nas configurações.', 'error');
+        showToast('Configure o Supabase.', 'error');
         return;
     }
 
@@ -1380,18 +1113,15 @@ async function loadLeads() {
         document.getElementById('leadsTabBadge').textContent = allLeads.length;
         applyFilters();
     } catch (err) {
-        showToast(`Erro ao carregar leads: ${err.message}`, 'error');
+        showToast(`Erro ao carregar: ${err.message}`, 'error');
     }
 }
 
-// ============================================================
-// PROPOSAL GENERATOR PIPELINE (ON DEMAND)
-// ============================================================
 async function generateProposal(leadId) {
     const cfg = getConfig();
 
     if (!cfg.githubRepo || !cfg.githubToken) {
-        showToast('Configure o GitHub Repo e Token nas configurações.', 'error');
+        showToast('Configure o GitHub Token.', 'error');
         openConfigModal();
         return;
     }
@@ -1425,13 +1155,13 @@ async function generateProposal(leadId) {
             throw new Error(err.message || response.statusText);
         }
 
-        showToast('Pipeline de análise e PDF em execução (~25s)...');
+        showToast('Analisando site e gerando PDF (~25s)...');
         pollProposalReady(leadId);
 
     } catch (err) {
         generatingLeads.delete(leadId);
         applyFilters();
-        showToast(`Erro ao disparar gerador: ${err.message}`, 'error');
+        showToast(`Erro: ${err.message}`, 'error');
     }
 }
 
@@ -1444,7 +1174,7 @@ function pollProposalReady(leadId) {
             clearInterval(interval);
             generatingLeads.delete(leadId);
             applyFilters();
-            showToast('Tempo limite excedido ao gerar proposta.', 'error');
+            showToast('Tempo limite excedido.', 'error');
             return;
         }
 
@@ -1466,15 +1196,12 @@ function pollProposalReady(leadId) {
                     lead.proposta_status = data.proposta_status;
                 }
                 applyFilters();
-                showToast('Proposta comercial pronta para download!');
+                showToast('Proposta pronta para download!');
             }
         } catch (e) {}
     }, 4000);
 }
 
-// ============================================================
-// FILTER & RENDER (TABLE & MOBILE CARDS)
-// ============================================================
 function applyFilters() {
     const query = (document.getElementById('filterSearch')?.value || '').toLowerCase();
     const nichoFilter = (document.getElementById('filterNicho')?.value || '').toLowerCase();
@@ -1513,7 +1240,7 @@ function renderLeads(leads) {
 
     emptyState.style.display = 'none';
 
-    // Desktop Table Rows
+    // Desktop
     tbody.innerHTML = leads.map(lead => {
         const phone = lead.telefone || '';
         const waPhone = phone.replace(/[^\d]/g, '');
@@ -1521,28 +1248,16 @@ function renderLeads(leads) {
 
         let proposalAction = '';
         if (isGenerating) {
-            proposalAction = `
-                <button class="btn btn-secondary btn-xs" disabled style="opacity:0.8;">
-                    <span class="spinner"></span> Gerando...
-                </button>
-            `;
+            proposalAction = `<button class="btn btn-secondary btn-xs" disabled><span class="spinner"></span> Gerando...</button>`;
         } else if (lead.proposta_pdf_url) {
             proposalAction = `
-                <div class="table-action-stack">
-                    <a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-xs">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        PDF
-                    </a>
-                    <button class="btn btn-ghost btn-xs" title="Regerar Proposta" onclick="generateProposal('${lead.id}')">🔄</button>
+                <div style="display:flex; gap:4px; align-items:center;">
+                    <a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-xs">PDF</a>
+                    <button class="btn btn-ghost btn-xs" title="Regerar" onclick="generateProposal('${lead.id}')">🔄</button>
                 </div>
             `;
         } else {
-            proposalAction = `
-                <button class="btn btn-generate btn-xs" onclick="generateProposal('${lead.id}')">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                    Gerar
-                </button>
-            `;
+            proposalAction = `<button class="btn btn-generate btn-xs" onclick="generateProposal('${lead.id}')">Gerar</button>`;
         }
 
         return `
@@ -1550,10 +1265,7 @@ function renderLeads(leads) {
                 <td>
                     <div class="lead-primary-cell">
                         <span class="lead-company-name">${esc(lead.nome)}</span>
-                        <span class="lead-company-phone">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            ${esc(phone)}
-                        </span>
+                        <span class="lead-company-phone">${esc(phone)}</span>
                     </div>
                 </td>
                 <td>
@@ -1564,44 +1276,33 @@ function renderLeads(leads) {
                 </td>
                 <td>
                     ${lead.tem_site && lead.site_url
-                        ? `<a href="${esc(lead.site_url)}" target="_blank" class="status-badge badge-positive">
-                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                             Site Ativo
-                           </a>`
+                        ? `<a href="${esc(lead.site_url)}" target="_blank" class="status-badge badge-positive">✓ Site</a>`
                         : `<span class="status-badge badge-negative">Sem Site</span>`
                     }
                 </td>
                 <td>
                     ${lead.tem_instagram && lead.instagram_handle
-                        ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" class="status-badge badge-positive">
-                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-                             ${esc(lead.instagram_handle)}
-                           </a>`
+                        ? `<a href="https://instagram.com/${esc(lead.instagram_handle.replace('@',''))}" target="_blank" class="status-badge badge-positive">${esc(lead.instagram_handle)}</a>`
                         : `<span class="status-badge badge-negative">Inativo</span>`
                     }
                 </td>
                 <td>
-                    <select class="lead-status-dropdown status-${lead.status || 'novo'}" onchange="updateLeadStatus('${lead.id}', this.value, this)">
+                    <select class="lead-status-dropdown" onchange="updateLeadStatus('${lead.id}', this.value)">
                         <option value="novo"       ${lead.status==='novo'       ? 'selected':''}>Novo</option>
                         <option value="contatado"  ${lead.status==='contatado'  ? 'selected':''}>Contatado</option>
                         <option value="convertido" ${lead.status==='convertido' ? 'selected':''}>Convertido</option>
                         <option value="descartado" ${lead.status==='descartado' ? 'selected':''}>Descartado</option>
                     </select>
                 </td>
-                <td>
-                    ${proposalAction}
-                </td>
+                <td>${proposalAction}</td>
                 <td style="text-align: right;">
-                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-xs">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.072-2.029-.481-1.604-.664-2.639-2.28-2.719-2.387-.079-.108-.648-.862-.648-1.645 0-.783.41-1.168.556-1.328.146-.16.32-.2.427-.2.107 0 .213.001.306.006.098.005.23-.037.36.275.144.346.49 1.198.533 1.286.043.088.072.19.014.306-.058.115-.088.188-.174.288-.087.1-.183.223-.262.299-.088.084-.18.176-.078.351.102.175.454.748.974 1.212.671.597 1.236.782 1.411.869.175.087.278.073.38-.044.103-.116.438-.511.556-.686.117-.175.234-.146.395-.087.16.058 1.019.48 1.194.568.175.088.292.131.335.204.044.073.044.423-.1.828z"/></svg>
-                        WhatsApp
-                    </a>
+                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-xs">WhatsApp</a>
                 </td>
             </tr>
         `;
     }).join('');
 
-    // Mobile Responsive Cards
+    // Mobile
     mobileContainer.innerHTML = leads.map(lead => {
         const phone = lead.telefone || '';
         const waPhone = phone.replace(/[^\d]/g, '');
@@ -1611,9 +1312,9 @@ function renderLeads(leads) {
         if (isGenerating) {
             proposalBtn = `<button class="btn btn-secondary btn-sm" disabled><span class="spinner"></span> Gerando...</button>`;
         } else if (lead.proposta_pdf_url) {
-            proposalBtn = `<a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-sm">📄 Baixar PDF</a>`;
+            proposalBtn = `<a href="${esc(lead.proposta_pdf_url)}" target="_blank" class="btn btn-download btn-sm">Baixar PDF</a>`;
         } else {
-            proposalBtn = `<button class="btn btn-generate btn-sm" onclick="generateProposal('${lead.id}')">⚡ Gerar Proposta</button>`;
+            proposalBtn = `<button class="btn btn-generate btn-sm" onclick="generateProposal('${lead.id}')">Gerar Proposta</button>`;
         }
 
         return `
@@ -1623,7 +1324,7 @@ function renderLeads(leads) {
                         <div class="lead-company-name">${esc(lead.nome)}</div>
                         <div class="lead-company-phone">${esc(phone)}</div>
                     </div>
-                    <select class="lead-status-dropdown status-${lead.status || 'novo'}" onchange="updateLeadStatus('${lead.id}', this.value, this)">
+                    <select class="lead-status-dropdown" onchange="updateLeadStatus('${lead.id}', this.value)">
                         <option value="novo"       ${lead.status==='novo'       ? 'selected':''}>Novo</option>
                         <option value="contatado"  ${lead.status==='contatado'  ? 'selected':''}>Contatado</option>
                         <option value="convertido" ${lead.status==='convertido' ? 'selected':''}>Convertido</option>
@@ -1632,16 +1333,16 @@ function renderLeads(leads) {
                 </div>
 
                 <div class="mobile-lead-meta-row">
-                    <span class="status-badge" style="background:rgba(255,255,255,0.05); color:#a1a1aa;">${esc(lead.nicho)}</span>
-                    <span class="status-badge" style="background:rgba(255,255,255,0.05); color:#a1a1aa;">${esc(lead.regiao)}</span>
+                    <span class="mobile-tag">${esc(lead.nicho)}</span>
+                    <span class="mobile-tag">${esc(lead.regiao)}</span>
                     ${lead.tem_site ? `<span class="status-badge badge-positive">✓ Site</span>` : ''}
-                    ${lead.tem_instagram ? `<span class="status-badge badge-positive">✓ Instagram</span>` : ''}
+                    ${lead.tem_instagram ? `<span class="status-badge badge-positive">✓ Insta</span>` : ''}
                 </div>
 
                 <div class="mobile-lead-actions-row">
                     ${proposalBtn}
-                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-sm" style="flex:1;">
-                        💬 Chamar no WhatsApp
+                    <a href="https://wa.me/${waPhone}" target="_blank" class="btn btn-whatsapp btn-sm">
+                        WhatsApp
                     </a>
                 </div>
             </div>
@@ -1649,15 +1350,8 @@ function renderLeads(leads) {
     }).join('');
 }
 
-// ============================================================
-// UPDATE LEAD STATUS
-// ============================================================
-async function updateLeadStatus(leadId, newStatus, selectEl) {
+async function updateLeadStatus(leadId, newStatus) {
     if (!supabaseClient) return;
-
-    if (selectEl) {
-        selectEl.className = 'lead-status-dropdown status-' + newStatus;
-    }
 
     try {
         const { error } = await supabaseClient
@@ -1672,13 +1366,10 @@ async function updateLeadStatus(leadId, newStatus, selectEl) {
 
         showToast(`Status atualizado para "${newStatus}"`);
     } catch (err) {
-        showToast(`Erro ao atualizar: ${err.message}`, 'error');
+        showToast(`Erro: ${err.message}`, 'error');
     }
 }
 
-// ============================================================
-// HELPERS & TOAST
-// ============================================================
 function esc(str) {
     if (!str) return '';
     const div = document.createElement('div');
@@ -1690,19 +1381,15 @@ function showToast(message, type = 'success') {
     const container = document.getElementById('toastViewport');
     const toast = document.createElement('div');
     toast.className = 'toast-item' + (type === 'error' ? ' error' : '');
-    toast.innerHTML = (type === 'error' ? '✕ ' : '✓ ') + message;
+    toast.textContent = message;
     container.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateY(8px)';
         toast.style.transition = 'all 0.2s ease-out';
         setTimeout(() => toast.remove(), 200);
-    }, 3500);
+    }, 3000);
 }
 
-// ============================================================
-// INITIALIZATION
-// ============================================================
 loadConfigInputs();
 initSupabase();
 loadLeads();
