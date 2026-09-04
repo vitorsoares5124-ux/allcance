@@ -492,13 +492,23 @@
         .lead-primary-cell {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
+            max-width: 280px;
+            min-width: 0;
         }
 
         .lead-company-name {
             font-weight: 700;
             color: #ffffff;
             font-size: 14px;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
         }
 
         .lead-company-phone {
@@ -578,7 +588,16 @@
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .mobile-lead-card-header > div:first-child {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mobile-lead-card-header select {
+            flex-shrink: 0;
         }
 
         .mobile-lead-meta-row {
@@ -772,7 +791,7 @@
             Nova Prospecção
         </button>
         <button class="tab-btn" id="btn-tab-leads" onclick="switchTab('leads', this)">
-            Leads Capturados
+            Leads
             <span class="tab-count" id="leadsTabBadge">0</span>
         </button>
     </nav>
